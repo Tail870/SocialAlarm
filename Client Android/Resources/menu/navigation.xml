@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <item
+      android:id="@+id/navigation_add_alarm"
+      android:icon="@drawable/ic_add_alarm_black_24dp"
+      android:title="@string/title_alarm_editor"
+      
+      />
+
+  <item
+      android:id="@+id/navigation_my_alarms"
+      android:icon="@drawable/ic_my_alarms_black_24dp"
+      android:title="@string/title_my_alarm"
+      android:checked="true"/>
+
+  <item
+      android:id="@+id/navigation_wake_us"
+      android:icon="@drawable/ic_wake_us_black_24dp"
+      android:title="@string/title_wake_us" />
+
+  <item
+      android:id="@+id/navigation_logs"
+      android:icon="@drawable/ic_logs_black_24dp"
+      android:title="@string/title_logs"
+      android:checked="true"/>
+
+  <item
+      android:id="@+id/navigation_settings"
+      android:icon="@drawable/ic_settings_black_24dp"
+      android:title="@string/title_settings" />
+
+</menu>

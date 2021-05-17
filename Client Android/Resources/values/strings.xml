@@ -1,0 +1,59 @@
+<resources>
+  <!--Default locale-->
+  <string name="app_name">Social Alarm</string>
+
+  <!--Titles-->
+  <string name="title_alarm_editor">Alarm editor</string>
+  <string name="title_ringtone_editor">Ringtone editor</string>
+  <string name="title_settings">Settings</string>
+  <string name="title_my_alarm">My alarms</string>
+  <string name="title_logs">History</string>
+  <string name="title_wake_us">Wake us</string>
+
+  <!--Headers-->
+  <string name="header_user">User:</string>
+  <string name="header_user_description">"User's additional information:"</string>
+  <string name="header_waker">Waker:</string>
+  <string name="header_user_you">User (you):</string>
+  <string name="header_login">Login:</string>
+  <string name="header_password">Password:</string>
+  <string name="header_authorization">Authorization</string>
+  <string name="header_connectivity">Connectivity</string>
+  <string name="header_server_address">Server address:</string>
+  <string name="header_description">Description:</string>
+  <string name="header_ringtones">Ringtones</string>
+  <string name="header_ringtone_uri">Ringtone system path:</string>
+  <string name="header_ringtone_name">Ringtone name:</string>
+  <string name="Header_threshold">From</string>
+  <string name="Header_no_threshold">To</string>
+  <string name="Header_isAlarm">For waking up?</string>
+
+  <!--For code-->
+  <string name="isAlarm">Alarm</string>
+  <string name="isReminder">Reminder</string>
+  <string name="no_description">No description.</string>
+  <string name="no_info">No information.</string>
+  <string name="not_choosed">Not choosed yet.</string>
+
+  <!--Errors-->
+  <string name="NoCrendentials">Please, enter login/password in settings!</string>
+  <string name="NoServer">Please, enter Social Alarm server address in settings!</string>
+  <string name="ConnectionError">Error connecting to server!</string>
+  <string name="WrongCrendentials">Wrong user/password!</string>
+  <string name="wrong_alarm_time">Wrong time for ringing!</string>
+  <string name="user_not_online">User aren\'t connected!</string>
+  <string name="network_error">Network error!</string>
+
+  <!--Buttons-->
+  <string name="Ring">Ring</string>
+  <string name="ChooseRingtone">Choose ringtone</string>
+  <string name="Add">Add</string>
+  <string name="Edit">Edit</string>
+  <string name="Save">Save</string>
+  <string name="Delete">Delete</string>
+  <string name="Cancel">Cancel</string>
+  <string name="Finish">Finish</string>
+  <string name="Play">Play</string>
+  <string name="Stop">Stop</string>
+
+</resources>

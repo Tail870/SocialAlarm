@@ -1,0 +1,59 @@
+<resources>
+  <!--Русская локаль-->
+  <string name="app_name">Соц. Будильник</string>
+
+  <!--Названия-->
+  <string name="title_alarm_editor">Редактор будильника</string>
+  <string name="title_ringtone_editor">Редактор рингтона</string>
+  <string name="title_settings">Настройки</string>
+  <string name="title_my_alarm">Мои</string>
+  <string name="title_logs">История</string>
+  <string name="title_wake_us">Чужие</string>
+
+  <!--Заголовки-->
+  <string name="header_user">Пользователь:</string>
+  <string name="header_user_description">Доп. информация пользователя:</string>
+  <string name="header_waker">Будящий:</string>
+  <string name="header_user_you">Пользователь (вы):</string>
+  <string name="header_login">Логин:</string>
+  <string name="header_password">Пароль:</string>
+  <string name="header_authorization">Авторизация</string>
+  <string name="header_connectivity">Соединение</string>
+  <string name="header_server_address">Адрес сервера:</string>
+  <string name="header_description">Описание:</string>
+  <string name="header_ringtones">Звуковые сигналы</string>
+  <string name="header_ringtone_uri">Системный путь сигнала:</string>
+  <string name="header_ringtone_name">Название сигнала:</string>
+  <string name="Header_threshold">С</string>
+  <string name="Header_no_threshold">По</string>
+  <string name="Header_isAlarm">Для пробуждения?</string>
+
+  <!--Для кода-->
+  <string name="isAlarm">Будильник</string>
+  <string name="isReminder">Напоминание</string>
+  <string name="no_description">Нет описания.</string>
+  <string name="no_info">Нет информации.</string>
+  <string name="not_choosed">Ничего не выбрано.</string>
+
+  <!--Ошибки-->
+  <string name="NoCrendentials">Пожалуйста, введите логин/пароль в настройках!</string>
+  <string name="NoServer">Пожалуйста, введите адрес сервера Социального Будильника в настройках!</string>
+  <string name="ConnectionError">Ошибка соединения с сервером!</string>
+  <string name="WrongCrendentials">Неверный логин/пароль!</string>
+  <string name="wrong_alarm_time">Неверное время для звонка!</string>
+  <string name="user_not_online">Пользователь не подключён!</string>
+  <string name="network_error">Сетевая ошибка!</string>
+
+  <!--Кнопки-->
+  <string name="Ring">Позвонить</string>
+  <string name="ChooseRingtone">Выбрать звонок</string>
+  <string name="Add">Добавить</string>
+  <string name="Edit">Изменить</string>
+  <string name="Save">Сохранить</string>
+  <string name="Delete">Удалить</string>
+  <string name="Cancel">Отмена</string>
+  <string name="Finish">Завершить</string>
+  <string name="Play">Проиграть</string>
+  <string name="Stop">Остановить</string>
+
+</resources>
