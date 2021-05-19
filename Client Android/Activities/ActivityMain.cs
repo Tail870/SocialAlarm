@@ -56,6 +56,7 @@ namespace Client_Android
         protected override void OnResume()
         {
             base.OnResume();
+            ringtone.Stop();
             if ((socialAlarm == null) || (socialAlarm.connection == null) || (socialAlarm.connection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
             { CheckSettings(); }
             socialAlarm.activity = this;

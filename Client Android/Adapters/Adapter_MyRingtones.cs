@@ -99,22 +99,21 @@ namespace Client_Android
          * Test button action:
          * edits ringtone and sends update to server.
          */
-        private Ringtone ringtone = null;
         public void TestItem(int position)
         {
-            if (ringtone == null)
-            { ringtone = RingtoneManager.GetRingtone(adapter.activity, Android.Net.Uri.Parse(adapter.Ringtones[position].File)); }
-            if (ringtone.IsPlaying)
+            if (ActivityMain.ringtone == null)
+            { ActivityMain.ringtone = RingtoneManager.GetRingtone(adapter.activity, Android.Net.Uri.Parse(adapter.Ringtones[position].File)); }
+            if (ActivityMain.ringtone.IsPlaying)
             { StopPlaying(); }
             else
             {
-                ringtone = RingtoneManager.GetRingtone(adapter.activity, Android.Net.Uri.Parse(adapter.Ringtones[position].File));
+                ActivityMain.ringtone = RingtoneManager.GetRingtone(adapter.activity, Android.Net.Uri.Parse(adapter.Ringtones[position].File));
                 buttonTest.Text = Application.Context.Resources.GetString(Resource.String.Stop);
-                ringtone.Play();
+                ActivityMain.ringtone.Play();
             }
             Thread OnStop = new Thread(() =>
             {
-                while (ringtone.IsPlaying) { }
+                while (ActivityMain.ringtone.IsPlaying) { }
                 adapter.activity.RunOnUiThread(StopPlaying);
             });
             OnStop.Start();
@@ -122,8 +121,8 @@ namespace Client_Android
 
         private void StopPlaying()
         {
-            if (ringtone != null)
-            { ringtone.Stop(); }
+            if (ActivityMain.ringtone != null)
+            { ActivityMain.ringtone.Stop(); }
             buttonTest.Text = Application.Context.Resources.GetString(Resource.String.Play);
         }
     }
