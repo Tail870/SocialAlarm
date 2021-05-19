@@ -2,7 +2,6 @@
 using Android.Media;
 using Android.Util;
 using Android.Widget;
-using Client_Android.Activities;
 using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.LocalNotification;
 using System;
@@ -229,7 +228,7 @@ namespace Client_Android
             {
                 Log.Debug("HUB: ", "Ring attempt... ");
                 Model_Alarm myAlarm = myAlarms.Find(element => element.ID == alarmID);
-                Activities.ActivityMain.ringtone.Stop();
+                ActivityMain.ringtone.Stop();
                 if (myAlarm != null)
                 {
                     DateTimeOffset tempTime = myAlarm.Time.AddDays(1).ToLocalTime();
@@ -240,19 +239,19 @@ namespace Client_Android
                         if (ringtoneData != null)
                         {
                             Log.Debug("HUB: ", "Playing " + ringtoneData.ToString());
-                            Activities.ActivityMain.ringtone = RingtoneManager.GetRingtone(Application.Context, Android.Net.Uri.Parse(ringtoneData.File));
-                            Activities.ActivityMain.ringtone.Play();
+                            ActivityMain.ringtone = RingtoneManager.GetRingtone(Application.Context, Android.Net.Uri.Parse(ringtoneData.File));
+                            ActivityMain.ringtone.Play();
                         }
                         else
                         {
                             Log.Debug("HUB: ", "No ringtone found. Playing default ringtone.");
-                            Activities.ActivityMain.ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Ringtone));
+                            ActivityMain.ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Ringtone));
                         }
-                        if (!Activities.ActivityMain.ringtone.IsPlaying)
+                        if (!ActivityMain.ringtone.IsPlaying)
                         {
                             Log.Error("HUB: ", "Error playing selected ringtone. Playing default one.");
-                            Activities.ActivityMain.ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Ringtone));
-                            Activities.ActivityMain.ringtone.Play();
+                            ActivityMain.ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Ringtone));
+                            ActivityMain.ringtone.Play();
                         }
                         NotificationCenter.Current.Show((notification) => notification
                                         .WithTitle(ringer + " " + Application.Context.Resources.GetString(Resource.String.rang))
@@ -292,7 +291,7 @@ namespace Client_Android
                 { await connection.InvokeAsync("IamAwake", alarmID, ringer); }
                 catch (Exception)
                 { Toast.MakeText(Application.Context, Application.Context.Resources.GetString(Resource.String.network_error), ToastLength.Long).Show(); }
-                Activities.ActivityMain.ringtone.Stop();
+                ActivityMain.ringtone.Stop();
             }
         }
 
