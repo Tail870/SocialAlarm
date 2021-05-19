@@ -24,18 +24,18 @@ namespace Social_Alarm_Server
                 {
                     Console.WriteLine(user + " already connected! Closing existing connection...");
                     usersContexts[user].Abort();
-                    usersContexts.Remove(user);
-                    usersContexts.Add(user, Context);
+                    usersContexts[user] = Context;
+                    await Clients.Caller.SendAsync("ServerNotification", "connected");
                 }
                 else
                 {
-                    Console.WriteLine(user + " connected!");
                     usersContexts.Add(user, Context);
+                    Console.WriteLine(user + " connected!");
                     Console.Write("All connected users: ");
                     foreach (KeyValuePair<string, HubCallerContext> pair in usersContexts)
-                    { Console.Write("[" + pair.Key + "]"); }
-
+                    { Console.Write("[" + pair.Key + "] "); }
                     Console.WriteLine();
+                    await Clients.Caller.SendAsync("ServerNotification", "reconnected");
                 }
             }
             else
@@ -49,7 +49,6 @@ namespace Social_Alarm_Server
                 if (Context.ConnectionId == temp.ConnectionId)
                 { usersContexts.Remove(temp.User.Identity.Name); }
             }
-
             Console.Write(Context.User.Identity.Name + " disconnected! ");
             if (usersContexts.Count > 0)
             {

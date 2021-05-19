@@ -51,17 +51,13 @@ namespace Client_Android
             navigation = FindViewById<BottomNavigationView>(Resource.Id.navigation);
             navigation.SetOnNavigationItemSelectedListener(this);
             navigation.Menu.FindItem(Resource.Id.navigation_my_alarms).SetChecked(true);
-            CheckSettings();
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            if ((socialAlarm != null) && (socialAlarm.connection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
-            {
-                CheckSettings();
-            }
-
+            if ((socialAlarm == null) || (socialAlarm.connection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+            { CheckSettings(); }
             socialAlarm.activity = this;
         }
 
@@ -119,9 +115,9 @@ namespace Client_Android
             else
             {
                 await socialAlarm.ConnectAsync();
-                navigation.SelectedItemId = Resource.Id.navigation_my_alarms;
                 socialAlarm.GetAll();
                 swipeRefreshLayout.Refreshing = false;
+                navigation.SelectedItemId = Resource.Id.navigation_my_alarms;
             }
         }
 
