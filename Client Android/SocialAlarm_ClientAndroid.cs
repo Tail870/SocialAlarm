@@ -231,7 +231,7 @@ namespace Client_Android
                 ActivityMain.ringtone.Stop();
                 if (myAlarm != null)
                 {
-                    DateTimeOffset tempTime = myAlarm.Time.AddDays(1).ToLocalTime();
+                    DateTimeOffset tempTime = myAlarm.Time.ToLocalTime();
                     DateTimeOffset currentTime = new DateTimeOffset(1, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
                     if ((myAlarm.Time.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
                     {
