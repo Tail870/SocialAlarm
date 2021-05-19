@@ -1,5 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
+using Android.Media;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -31,7 +32,7 @@ namespace Client_Android
 
         public static Settings settings = null;
         public static SocialAlarm_ClientAndroid socialAlarm;
-
+        public static Ringtone ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Alarm));
 
         protected override void OnCreate(Bundle savedInstanceState)
         {

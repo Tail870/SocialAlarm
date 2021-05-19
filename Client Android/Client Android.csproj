@@ -116,7 +116,6 @@
   <ItemGroup>
     <Compile Include="Activities\ActivityAddRingtone.cs" />
     <Compile Include="Activities\ActivityAddAlarm.cs" />
-    <Compile Include="Activities\ActivityAlarming.cs" />
     <Compile Include="Activities\ActivityRing.cs" />
     <Compile Include="Adapters\Adapter_OthersRingtones.cs" />
     <Compile Include="Adapters\Adapter_MyRingtones.cs" />
@@ -269,12 +268,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\activity_addRingtone.xml">
-      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-      <SubType>Designer</SubType>
-    </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <AndroidResource Include="Resources\layout\activity_alarming.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
