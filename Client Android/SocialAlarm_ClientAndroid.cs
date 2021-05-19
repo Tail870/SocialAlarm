@@ -277,9 +277,6 @@ namespace Client_Android
                 Log.Error("HUB: ", "Reconecting...");
                 await CustomConnect();
             };
-
-            //  connection.Reconnected += async (ex) => GetAll();
-
             await CustomConnect();
         }
 
@@ -294,7 +291,6 @@ namespace Client_Android
                 ActivityMain.ringtone.Stop();
             }
         }
-
 
         private async System.Threading.Tasks.Task CustomConnect()
         {
