@@ -53,6 +53,7 @@ namespace Client_Android
         {
             socialAlarm.RemoveRingtone(ringtone);
             ringtonesMappingDB.Delete<Model_Ringtone>(ringtone.ID);
+            myRingtones.Remove(ringtone);
         }
 
         public void CheckRingtone(Model_Ringtone ringtone)

@@ -80,7 +80,6 @@ namespace Client_Android
             StopPlaying();
             ActivityMain.settings.RemoveRingtone(adapter.Ringtones[position]);
             adapter.NotifyItemRemoved(position);
-            adapter.Ringtones.RemoveAt(position);
         }
 
         /*
