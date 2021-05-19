@@ -1,19 +1,6 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using AndroidX.AppCompat.App;
-using AndroidX.RecyclerView.Widget;
-using AndroidX.SwipeRefreshLayout.Widget;
-using Google.Android.Material.BottomNavigation;
-using Newtonsoft.Json;
-using SQLite;
-using System;
+﻿using SQLite;
 using System.Collections.Generic;
 using System.IO;
-using Xamarin.Essentials;
 
 namespace Client_Android
 {
@@ -37,9 +24,14 @@ namespace Client_Android
         {
             myRingtones.Add(ringtone);
             if (ringtonesMappingDB.Find<Model_Ringtone>(element => ringtone.ID == element.ID) == null)
+            {
                 ringtonesMappingDB.Insert(ringtone);
+            }
             else
+            {
                 ringtonesMappingDB.Update(ringtone);
+            }
+
             socialAlarm.AddChangeRingtone(ringtone);
         }
 
@@ -65,16 +57,20 @@ namespace Client_Android
 
         public void CheckRingtone(Model_Ringtone ringtone)
         {
-            var temp = ringtonesMappingDB.Find<Model_Ringtone>(element => ringtone.ID == element.ID);
+            Model_Ringtone temp = ringtonesMappingDB.Find<Model_Ringtone>(element => ringtone.ID == element.ID);
             if (temp == null)
+            {
                 socialAlarm.RemoveRingtone(ringtone);
+            }
         }
 
         public void SyncRingtones()
         {
             List<Model_Ringtone> temp = ringtonesMappingDB.Table<Model_Ringtone>().ToList();
             foreach (Model_Ringtone ringtone in temp)
+            {
                 socialAlarm.CheckRingtone(ringtone);
+            }
         }
     }
 }

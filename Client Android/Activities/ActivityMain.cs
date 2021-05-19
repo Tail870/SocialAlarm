@@ -8,7 +8,6 @@ using AndroidX.AppCompat.App;
 using AndroidX.RecyclerView.Widget;
 using AndroidX.SwipeRefreshLayout.Widget;
 using Google.Android.Material.BottomNavigation;
-using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -45,20 +44,24 @@ namespace Client_Android
             recyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerView);
             recyclerView.SetLayoutManager(new LinearLayoutManager(this)
             {
-                // ReverseLayout = true,
-                // StackFromEnd = true
+                ReverseLayout = true,
+                StackFromEnd = true
             });
-
             navigation = FindViewById<BottomNavigationView>(Resource.Id.navigation);
             navigation.SetOnNavigationItemSelectedListener(this);
             navigation.Menu.FindItem(Resource.Id.navigation_my_alarms).SetChecked(true);
-
             CheckSettings();
         }
 
         protected override void OnResume()
         {
             base.OnResume();
+            if ((socialAlarm != null) && (socialAlarm.connection.State != Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected))
+            {
+                CheckSettings();
+            }
+
+            socialAlarm.activity = this;
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
@@ -86,7 +89,7 @@ namespace Client_Android
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        async void CheckSettings()
+        private async void CheckSettings()
         {
             swipeRefreshLayout.Refreshing = true;
 
@@ -94,20 +97,20 @@ namespace Client_Android
             othersAlarmsAdapter = new Adapter_OthersAlarms(othersAlarms, this);
             AlarmsLogsAdapter = new Adapter_AlarmsLogs(ref AlarmsLogs);
 
-            socialAlarm = new SocialAlarm_ClientAndroid(Preferences.Get("ServerAddress", ""), this, ref myAlarms, ref othersAlarms, ref AlarmsLogs, ref myAlarmsAdapter, ref othersAlarmsAdapter, ref AlarmsLogsAdapter);
+            socialAlarm = new SocialAlarm_ClientAndroid(Preferences.Get("ServerAddress", ""), ref myAlarms, ref othersAlarms, ref AlarmsLogs, ref myAlarmsAdapter, ref othersAlarmsAdapter, ref AlarmsLogsAdapter);
             settings = new Settings(socialAlarm);
 
-            if (Preferences.Get("ServerAddress", "").Length <= 0)
+            if (Preferences.Get("ServerAddress", "").Length == 0)
             {
-                Toast.MakeText(this, Application.Context.Resources.GetString(Resource.String.NoServer), ToastLength.Long).Show();
+                Toast.MakeText(this, Resources.GetString(Resource.String.NoServer), ToastLength.Long).Show();
                 Intent intent = new Intent(this, typeof(ActivitySettings));
                 StartActivity(intent);
                 return;
             }
             else
-            if (Preferences.Get("Login", "").Length <= 0 || Preferences.Get("Password", "").Length <= 0)
+            if (Preferences.Get("Login", "").Length == 0 || Preferences.Get("Password", "").Length == 0)
             {
-                Toast.MakeText(this, Application.Context.Resources.GetString(Resource.String.NoCrendentials), ToastLength.Long).Show();
+                Toast.MakeText(this, Resources.GetString(Resource.String.NoCrendentials), ToastLength.Long).Show();
                 Intent intent = new Intent(this, typeof(ActivitySettings));
                 StartActivity(intent);
                 return;
@@ -116,6 +119,7 @@ namespace Client_Android
             {
                 await socialAlarm.ConnectAsync();
                 navigation.SelectedItemId = Resource.Id.navigation_my_alarms;
+                socialAlarm.GetAll();
                 swipeRefreshLayout.Refreshing = false;
             }
         }
@@ -130,7 +134,7 @@ namespace Client_Android
                 recyclerView.SetAdapter(myAlarmsAdapter);
                 refreshHandler = (sender, args) =>
                 {
-                    socialAlarm.GetAlarms();
+                    socialAlarm.GetMyAlarms();
                     swipeRefreshLayout.Refreshing = false;
                 };
             }
@@ -144,13 +148,11 @@ namespace Client_Android
                     };
             }
             swipeRefreshLayout.Refresh += refreshHandler;
-            refreshHandler.Invoke(this, null);
         }
 
         private void SetRecycleViewLogs()
         {
             swipeRefreshLayout.Refresh -= refreshHandler;
-            recyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerView);
             recyclerView.SetAdapter(AlarmsLogsAdapter);
             refreshHandler = (sender, args) =>
             {
@@ -158,7 +160,6 @@ namespace Client_Android
                 swipeRefreshLayout.Refreshing = false;
             };
             swipeRefreshLayout.Refresh += refreshHandler;
-            refreshHandler.Invoke(this, null);
         }
 
         public bool OnNavigationItemSelected(IMenuItem item)

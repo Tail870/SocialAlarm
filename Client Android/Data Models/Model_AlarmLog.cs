@@ -28,18 +28,5 @@ namespace Client_Android
                 "Date time: " + DateTime + "; " +
                 "Description: " + Description;
         }
-
-        public Model_AlarmLog(bool IsWaker)
-        {
-            ID = 0;
-            UserSlept = "Sleeper";
-            UserWaker = "Waker";
-            this.IsWaker = IsWaker;
-            DateTime = DateTimeOffset.Now;
-            Description = "Test for a AlarmLogModel and RecyclerView. " +
-                "Test for a AlarmLogModel and RecyclerView. " +
-                "Test for a AlarmLogModel and RecyclerView. " +
-                "Test for a AlarmLogModel and RecyclerView. ";
-        }
     }
 }

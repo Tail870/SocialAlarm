@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Social_Alarm_Server
@@ -16,7 +15,10 @@ namespace Social_Alarm_Server
             public DbSet<AlarmLog> AlarmLogs { get; set; }
             public DbSet<Ringtone> Ringtones { get; set; }
 
-            public DataBaseContext() => Database.EnsureCreated();
+            public DataBaseContext()
+            {
+                Database.EnsureCreated();
+            }
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
@@ -44,9 +46,11 @@ namespace Social_Alarm_Server
                     Console.WriteLine(username + " - correct password.");
                     return true;
                 }
-                else Console.WriteLine(username + " - wrong password.");
+                else
+                { Console.WriteLine(username + " - wrong password."); }
             }
-            else Console.WriteLine("No such user: " + username);
+            else
+            { Console.WriteLine("No such user: " + username); }
             return false;
         }
 
@@ -56,7 +60,7 @@ namespace Social_Alarm_Server
             DataBaseContext context = new();
             User ConnectingUser = context.Users.Find(username);
             if (ConnectingUser == null)
-                return null;
+            { return null; }
             return ConnectingUser.DisplayedName;
         }
 
@@ -65,31 +69,31 @@ namespace Social_Alarm_Server
             DataBaseContext context = new();
             User user = context.Users.Find(username);
             if (user == null)
-                return null;
+            { return null; }
             return user.Contacts;
         }
 
         public Alarm AddAlarm(Alarm addedAlarm)
         {
             if (addedAlarm.Threshold > 1440)
-                addedAlarm.Threshold = 1440;
-
+            { addedAlarm.Threshold = 1440; }
             // HACK Bug: if Date is too low, then DB probably receives wrong offset in addedAlarm.Time.
-            var CurrentDay = DateTimeOffset.Now;
-            var AlarmTime = addedAlarm.Time;
+            DateTimeOffset CurrentDay = DateTimeOffset.Now;
+            DateTimeOffset AlarmTime = addedAlarm.Time;
             addedAlarm.Time = new DateTimeOffset(CurrentDay.Year, CurrentDay.Month, CurrentDay.Day, AlarmTime.Hour, AlarmTime.Minute, 0, 0, AlarmTime.Offset);
 
             try
             {
                 DataBaseContext context = new();
                 if (context.Alarms.Where(element => element.ID == addedAlarm.ID).Count() > 0)
-                    context.Alarms.Update(addedAlarm);
+                { context.Alarms.Update(addedAlarm); }
                 else
-                    context.Alarms.Add(addedAlarm);
+                { context.Alarms.Add(addedAlarm); }
                 if (addedAlarm.ID == 0)
-                    Console.WriteLine("Added alarm: " + addedAlarm.ToString());
+                { Console.WriteLine("Added alarm: " + addedAlarm.ToString()); }
                 else
-                    Console.WriteLine("Moded alarm: " + addedAlarm.ToString());
+                { Console.WriteLine("Moded alarm: " + addedAlarm.ToString()); }
+
                 context.SaveChanges();
             }
             catch (Exception ex)
@@ -102,12 +106,18 @@ namespace Social_Alarm_Server
             return addedAlarm;
         }
 
-        public IQueryable<Alarm> GetAlarms()
+        public IQueryable<Alarm> GetAlarms(string user, bool owner)
         {
             DataBaseContext context = new();
-            List<Alarm> l = context.Alarms.ToList();
-            int c = l.Count;
-            return context.Alarms;
+            if (user.Length > 0)
+            {
+                if (owner)
+                { return context.Alarms.Where(alarm => alarm.User == user); }
+                else
+                { return context.Alarms.Where(alarm => alarm.User != user); }
+            }
+            else
+            { return context.Alarms; }
         }
 
         public Alarm GetAlarm(int id)
@@ -115,7 +125,7 @@ namespace Social_Alarm_Server
             DataBaseContext context = new();
             Alarm alarm = context.Alarms.Where(element => element.ID == id).First();
             if (alarm.Threshold > 1440)
-                alarm.Threshold = 1440;
+            { alarm.Threshold = 1440; }
             return alarm;
         }
 
@@ -145,13 +155,15 @@ namespace Social_Alarm_Server
             {
                 DataBaseContext context = new();
                 if (context.Ringtones.Where(element => element.ID == ringtone.ID).Count() > 0)
-                    addedRingtone = context.Ringtones.Update(ringtone);
+                { addedRingtone = context.Ringtones.Update(ringtone); }
                 else
-                    addedRingtone = context.Ringtones.Add(ringtone);
+                { addedRingtone = context.Ringtones.Add(ringtone); }
+
                 if (ringtone.ID == 0)
-                    Console.WriteLine("Added ringtone: " + ringtone.ToString());
+                { Console.WriteLine("Added ringtone: " + ringtone.ToString()); }
                 else
-                    Console.WriteLine("Moded ringtone: " + ringtone.ToString());
+                { Console.WriteLine("Moded ringtone: " + ringtone.ToString()); }
+
                 context.SaveChanges();
             }
             catch (Exception ex)
@@ -159,6 +171,7 @@ namespace Social_Alarm_Server
                 Console.WriteLine("/------------AddRingtone------------\\");
                 Console.WriteLine(ex.ToString());
                 Console.WriteLine("\\------------AddRingtone------------/");
+                return null;
             }
             return addedRingtone.Entity;
         }
@@ -173,9 +186,9 @@ namespace Social_Alarm_Server
         {
             DataBaseContext context = new();
             if (context.Ringtones.Where(element => element == ringtone).Count() > 0)
-                return true;
+            { return true; }
             else
-                return false;
+            { return false; }
         }
 
         public bool RemoveRingtone(Ringtone ringtone)
@@ -189,7 +202,9 @@ namespace Social_Alarm_Server
             }
             catch (Exception ex)
             {
+                Console.WriteLine("/------------AddRingtone------------\\");
                 Console.WriteLine(ex.ToString());
+                Console.WriteLine("\\------------AddRingtone------------/");
                 return false;
             }
             return true;
@@ -201,7 +216,7 @@ namespace Social_Alarm_Server
             return context.AlarmLogs.Where(AlarmLog => (AlarmLog.UserSlept == Participator) || (AlarmLog.UserWaker == Participator));
         }
 
-        public AlarmLog AlarmToLog(Alarm alarm, DateTime WokeUpTime, string Waker)
+        public AlarmLog AlarmToLog(Alarm alarm, DateTimeOffset WokeUpTime, string Waker)
         {
             AlarmLog alarmLog = new();
             alarmLog.UserSlept = alarm.User;
@@ -209,24 +224,21 @@ namespace Social_Alarm_Server
             alarmLog.Description = alarm.Description;
             alarmLog.DateTime = WokeUpTime;
             alarmLog.IsWaker = alarm.IsWaker;
-            Console.WriteLine("Added alarm log: " + alarmLog.ToString());
             return alarmLog;
         }
 
-        public AlarmLog AddAlarmLog(Alarm alarm, DateTime WokeUpTime, string Waker)
+        public AlarmLog AddAlarmLog(Alarm alarm, DateTimeOffset WokeUpTime, string Waker)
         {
-            EntityEntry<AlarmLog> addedLog;
             try
             {
                 DataBaseContext context = new();
-                addedLog = context.AlarmLogs.Add(AlarmToLog(alarm, WokeUpTime, Waker));
+                AlarmLog addedLog = context.AlarmLogs.Add(AlarmToLog(alarm, WokeUpTime, Waker)).Entity;
                 context.SaveChanges();
-                return addedLog.Entity;
+                Console.WriteLine("Added alarm log: " + addedLog.ToString());
+                return addedLog;
             }
             catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+            { Console.WriteLine(ex.ToString()); }
             return null;
         }
     }

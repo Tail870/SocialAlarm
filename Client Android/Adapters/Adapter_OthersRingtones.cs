@@ -1,21 +1,15 @@
-﻿using Android.App;
-using Android.Content;
-using Android.Media;
-using Android.Net;
-using Android.Views;
+﻿using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Client_Android
 {
     public class Adapter_OthersRingtones : RecyclerView.Adapter
     {
-        protected List<Model_Ringtone> Ringtones;
-        ViewHolder_Ringtones viewHolder;
-        Model_Alarm alarm;
-
+        private ViewHolder_OthersRingtones viewHolder;
+        public List<Model_Ringtone> Ringtones { get; }
+        public Model_Alarm alarm { get; }
 
         public Adapter_OthersRingtones(List<Model_Ringtone> Ringtones, Model_Alarm alarm)
         {
@@ -31,45 +25,45 @@ namespace Client_Android
          */
         public override void OnBindViewHolder(RecyclerView.ViewHolder viewHolder, int position)
         {
-            this.viewHolder = (ViewHolder_Ringtones)viewHolder;
-            this.viewHolder.adapter = this;
-
+            this.viewHolder = (ViewHolder_OthersRingtones)viewHolder;
             this.viewHolder.textViewRingtonename.Text = Ringtones[position].RingtoneName;
             if (Ringtones[position].Description != null && Ringtones[position].Description.Trim().Length > 0)
+            {
                 this.viewHolder.textViewDescription.Text = Ringtones[position].Description;
+            }
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
             View itemView = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.element_othersRingtone, parent, false);
-            return new ViewHolder_Ringtones(itemView);
+            return new ViewHolder_OthersRingtones(itemView, this);
+        }
+    }
+
+    [System.Serializable]
+    public class ViewHolder_OthersRingtones : RecyclerView.ViewHolder
+    {
+        public TextView textViewRingtonename { get; set; }
+        public TextView textViewDescription { get; set; }
+        public Button buttonRing { get; set; }
+        private Adapter_OthersRingtones adapter { get; set; }
+
+        public ViewHolder_OthersRingtones(View itemView, Adapter_OthersRingtones adapter) : base(itemView)
+        {
+            this.adapter = adapter;
+            textViewRingtonename = itemView.FindViewById<TextView>(Resource.Id.textViewRingtonename);
+            textViewDescription = itemView.FindViewById<TextView>(Resource.Id.textViewDescription);
+            buttonRing = itemView.FindViewById<Button>(Resource.Id.buttonRing);
+            buttonRing.Click += (e, o) => Ring();
         }
 
-        [System.Serializable]
-        public class ViewHolder_Ringtones : RecyclerView.ViewHolder
+        /*
+         * Ring button action:
+         * plays ringtone remotely.
+         */
+        public void Ring()
         {
-            public TextView textViewRingtonename { get; set; }
-            public TextView textViewDescription { get; set; }
-            public Button buttonRing { get; set; }
-            public Adapter_OthersRingtones adapter { get; set; }
-
-            public ViewHolder_Ringtones(View itemView) : base(itemView)
-            {
-                textViewRingtonename = itemView.FindViewById<TextView>(Resource.Id.textViewRingtonename);
-                textViewDescription = itemView.FindViewById<TextView>(Resource.Id.textViewDescription);
-                buttonRing = itemView.FindViewById<Button>(Resource.Id.buttonRing);
-
-                buttonRing.Click += (e, o) => Ring();
-            }
-
-            /*
-             * Ring button action:
-             * plays ringtone remotely.
-             */
-            public void Ring()
-            {
-                ActivityMain.socialAlarm.RingAlarm(adapter.alarm.ID, adapter.Ringtones[AdapterPosition].ID);
-            }
+            ActivityMain.socialAlarm.RingAlarm(adapter.alarm.ID, adapter.Ringtones[AdapterPosition].ID);
         }
     }
 }

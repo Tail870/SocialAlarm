@@ -2,7 +2,6 @@
 using Android.Content;
 using Android.OS;
 using Android.Text.Format;
-using Android.Util;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using Newtonsoft.Json;
@@ -41,10 +40,8 @@ namespace Client_Android
                 timePicker.SetIs24HourView((Java.Lang.Boolean)true);
                 timePickerThreshold.SetIs24HourView((Java.Lang.Boolean)true);
             }
-
             buttonSave = FindViewById<Button>(Resource.Id.buttonSave);
             buttonCancel = FindViewById<Button>(Resource.Id.buttonCancel);
-
             buttonSave.Click += (e, o) => SaveChanges();
             buttonCancel.Click += (e, o) => Finish();
 
@@ -54,33 +51,37 @@ namespace Client_Android
                 alarm = JsonConvert.DeserializeObject<Model_Alarm>(alarmJSON);
                 toggleButtonIsWaker.Checked = alarm.IsWaker;
                 editTextDescription.Text = alarm.Description;
-                DateTimeOffset time = alarm.Time.AddDays(1);
-                timePicker.CurrentHour = (Java.Lang.Integer)time.Hour;
-                timePicker.CurrentMinute = (Java.Lang.Integer)time.Minute;
+                DateTimeOffset time = alarm.Time.ToLocalTime();
+                timePicker.Hour = time.Hour;
+                timePicker.Minute = time.Minute;
                 time = time.AddMinutes(-alarm.Threshold);
-                timePickerThreshold.CurrentHour = (Java.Lang.Integer)alarm.Time.Hour;
-                timePickerThreshold.CurrentMinute = (Java.Lang.Integer)alarm.Time.Minute;
+                timePickerThreshold.Hour = alarm.Time.Hour;
+                timePickerThreshold.Minute = alarm.Time.Minute;
             }
         }
 
         private void SaveChanges()
         {
             if (alarm == null)
+            {
                 alarm = new Model_Alarm();
+            }
             alarm.User = Preferences.Get("Login", "");
             alarm.IsWaker = toggleButtonIsWaker.Checked;
             alarm.Description = editTextDescription.Text;
 
-            int timeStart = ((int)timePickerThreshold.CurrentHour * 60) + (int)timePickerThreshold.CurrentMinute;
-            int timeEnd = ((int)timePicker.CurrentHour * 60) + (int)timePicker.CurrentMinute;
-            if (timeStart <= timeEnd)
-                alarm.Threshold = timeEnd - timeStart;
+            int timeStart = (timePickerThreshold.Hour * 60) + timePickerThreshold.Minute;
+            int timeEnd = (timePicker.Hour * 60) + timePicker.Minute;
+
+            // Check if starting alarm time less than it's ending
+            if (timeStart < timeEnd)
+            { alarm.Threshold = timeEnd - timeStart; }
+            // If not - correct the threshold (min.) variable
             else
-                alarm.Threshold = timeStart - timeEnd;
-            Log.Error("----", timeStart.ToString() + "    " + timeEnd.ToString());
-            alarm.Time = new DateTimeOffset(2,2, 2, (int)timePicker.CurrentHour, (int)timePicker.CurrentMinute, 0, DateTimeOffset.Now.Offset);
-            this.Intent.PutExtra("AlarmToEdit", JsonConvert.SerializeObject(alarm));
-            SetResult(Result.Ok, this.Intent);
+            { alarm.Threshold = 1440 - (timeEnd - timeStart); }
+            alarm.Time = new DateTimeOffset(2, 2, 2, timePicker.Hour, timePicker.Minute, 0, DateTimeOffset.Now.Offset);
+            Intent.PutExtra("AlarmToEdit", JsonConvert.SerializeObject(alarm));
+            SetResult(Result.Ok, Intent);
             Finish();
         }
     }

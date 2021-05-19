@@ -71,6 +71,7 @@
                     android:text="@string/Header_threshold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:layout_marginRight="5px" />
 
                 <TextView
@@ -78,6 +79,7 @@
                     tools:ignore="HardcodedText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/textViewThreshold" />
 
             </LinearLayout>
@@ -90,7 +92,6 @@
 
                 <TextView
                     android:text="@string/Header_no_threshold"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5px"/>
@@ -98,7 +99,6 @@
                 <TextView
                     android:text="HH:MM"
                     tools:ignore="HardcodedText"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textViewTime"/>

@@ -1,7 +1,6 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Util;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.RecyclerView.Widget;
@@ -13,13 +12,13 @@ namespace Client_Android
     [Activity(Label = "@string/title_settings", Theme = "@style/AppTheme")]
     public class ActivitySettings : AppCompatActivity
     {
-        EditText editTextLogin { get; set; }
-        EditText editTextPassword { get; set; }
-        EditText editTextServer { get; set; }
-        Button buttonAdd { get; set; }
-        Button buttonSave { get; set; }
-        Button buttonCancel { get; set; }
-        Adapter_MyRingtones MyRingtonesAdapter { get; set; }
+        private EditText editTextLogin { get; set; }
+        private EditText editTextPassword { get; set; }
+        private EditText editTextServer { get; set; }
+        private Button buttonAdd { get; set; }
+        private Button buttonSave { get; set; }
+        private Button buttonCancel { get; set; }
+        private Adapter_MyRingtones MyRingtonesAdapter { get; set; }
 
         private RecyclerView recyclerView;
 

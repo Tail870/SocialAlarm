@@ -34,6 +34,14 @@
   <string name="no_description">No description.</string>
   <string name="no_info">No information.</string>
   <string name="not_choosed">Not choosed yet.</string>
+  <string name="rang">rang!</string>
+  <string name="alarm_description">Alarm\'s description:</string>
+  <string name="alarm_finish">Assumtion sent.</string>
+  <string name="alarm_finish_atempt">assumes alarm worked.</string>
+  <string name="alarm_finish_atempt_yn">Is that true?</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+  <string name="user_woke_up">Alarm worked!</string>
 
   <!--Errors-->
   <string name="NoCrendentials">Please, enter login/password in settings!</string>

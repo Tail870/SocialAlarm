@@ -22,7 +22,7 @@ namespace Client_Android
         public EditText editTextDescription { get; set; }
         public TextView textViewRingtoneURI { get; set; }
 
-        Model_Ringtone ringtone;
+        private Model_Ringtone ringtone;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -52,7 +52,10 @@ namespace Client_Android
                 editTextDescription.Text = ringtone.Description;
                 textViewRingtoneURI.Text = ringtone.File;
             }
-            else ringtone = new Model_Ringtone();
+            else
+            {
+                ringtone = new Model_Ringtone();
+            }
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
@@ -73,7 +76,7 @@ namespace Client_Android
             }
         }
 
-        void ChooseRingtone()
+        private void ChooseRingtone()
         {
             Intent intent = new Intent(RingtoneManager.ActionRingtonePicker);
             StartActivityForResult(intent, 77);
@@ -83,14 +86,17 @@ namespace Client_Android
         private void SaveChanges()
         {
             if (ringtone == null)
+            {
                 ringtone = new Model_Ringtone();
+            }
+
             ringtone.User = Preferences.Get("Login", "");
             ringtone.RingtoneName = editTextRingtoneName.Text;
             ringtone.Description = editTextDescription.Text;
             if (ringtone.RingtoneName != null && ringtone.File != null && ringtone.RingtoneName.Length > 0 && ringtone.File.Length > 0)
             {
-                this.Intent.PutExtra("RingtoneToEdit", JsonConvert.SerializeObject(ringtone));
-                SetResult(Result.Ok, this.Intent);
+                Intent.PutExtra("RingtoneToEdit", JsonConvert.SerializeObject(ringtone));
+                SetResult(Result.Ok, Intent);
                 Finish();
             }
         }

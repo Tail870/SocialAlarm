@@ -26,18 +26,5 @@ namespace Client_Android
                 "Ringtone name: " + RingtoneName + "; " +
                 "Description: " + Description;
         }
-
-        public Model_Ringtone()
-        {
-            Random rnd = new Random();
-
-            ID = rnd.Next(100);
-            User = "test";
-            RingtoneName = "TestModel";
-            Description = "Test for a RingtoneModel and RecyclerView. " +
-                "Test for a RingtoneModel and RecyclerView. " +
-                "Test for a RingtoneModel and RecyclerView. " +
-                "Test for a RingtoneModel and RecyclerView. ";
-        }
     }
 }

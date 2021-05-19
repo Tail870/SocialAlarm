@@ -34,6 +34,13 @@
   <string name="no_description">Нет описания.</string>
   <string name="no_info">Нет информации.</string>
   <string name="not_choosed">Ничего не выбрано.</string>
+  <string name="rang">позвонил!</string>
+  <string name="alarm_finish">Предположение отправлено.</string>
+  <string name="alarm_finish_atempt">предполагает, что будильник сработал.</string>
+  <string name="alarm_finish_atempt_yn">Это верно?</string>
+  <string name="yes">Да</string>
+  <string name="no">Нет</string>
+  <string name="user_woke_up">Будильник сработал!</string>
 
   <!--Ошибки-->
   <string name="NoCrendentials">Пожалуйста, введите логин/пароль в настройках!</string>

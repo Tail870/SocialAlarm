@@ -11,61 +11,67 @@ namespace Social_Alarm_Server
     [Authorize]
     public class SocialAlarm_Server : Hub
     {
-        private DataBridge dataBridge = new();
-        private static Dictionary<string, HubCallerContext> usersContexts = new();
-
-        int DelayTime = 100;
+        private readonly DataBridge dataBridge = new();
+        private static readonly Dictionary<string, HubCallerContext> usersContexts = new();
+        private readonly int DelayTime = 100;
 
         public override async Task OnConnectedAsync()
         {
-            var user = Context.User.Identity.Name;
+            string user = Context.User.Identity.Name;
             if (user.Length > 0)
+            {
                 if (usersContexts.ContainsKey(user))
                 {
                     Console.WriteLine(user + " already connected! Closing existing connection...");
                     usersContexts[user].Abort();
                     usersContexts.Remove(user);
-                    usersContexts[user] = Context;
+                    usersContexts.Add(user, Context);
                 }
                 else
                 {
                     Console.WriteLine(user + " connected!");
-                    //await Clients.All.SendAsync("NewUsersCount", usersContexts.Count);
                     usersContexts.Add(user, Context);
                     Console.Write("All connected users: ");
                     foreach (KeyValuePair<string, HubCallerContext> pair in usersContexts)
-                        Console.Write("[" + pair.Key + "]");
+                    { Console.Write("[" + pair.Key + "]"); }
+
                     Console.WriteLine();
                 }
-            else Context.Abort();
+            }
+            else
+            { Context.Abort(); }
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
             if (usersContexts.TryGetValue(Context.User.Identity.Name, out HubCallerContext temp))
+            {
                 if (Context.ConnectionId == temp.ConnectionId)
-                    usersContexts.Remove(temp.User.Identity.Name);
+                { usersContexts.Remove(temp.User.Identity.Name); }
+            }
+
             Console.Write(Context.User.Identity.Name + " disconnected! ");
             if (usersContexts.Count > 0)
             {
                 Console.Write("List of connected users: ");
-                Console.WriteLine(string.Join(", ", usersContexts.Keys));
+                foreach (KeyValuePair<string, HubCallerContext> pair in usersContexts)
+                { Console.Write("[" + pair.Key + "]"); }
             }
             else
-                Console.WriteLine("No users connected.");
+            { Console.WriteLine("No users connected."); }
         }
 
         [HubMethodName("GetAlarms")]
-        public async Task SendAlarms()
+        public async Task GetMyAlarms(bool owner)
         {
-           var alarms =  dataBridge.GetAlarms();
+            System.Linq.IQueryable<Alarm> alarms = dataBridge.GetAlarms(Context.User.Identity.Name, owner);
             foreach (Alarm alarm in alarms)
             {
-                Console.WriteLine(alarm.ToString());
                 await Clients.Caller.SendAsync("GetAlarm", alarm, dataBridge.GetDisplayedName(alarm.User), dataBridge.GetUserDescription(alarm.User));
                 Thread.Sleep(DelayTime);
             }
         }
+
         [HubMethodName("AddAlarm")]
         public async Task AddAlarm(Alarm alarm)
         {
@@ -76,78 +82,105 @@ namespace Social_Alarm_Server
                 await Clients.All.SendAsync("GetAlarm", alarm, dataBridge.GetDisplayedName(alarm.User), dataBridge.GetUserDescription(alarm.User));
             }
             else
-                await Clients.Caller.SendAsync("ServerNotification", "Error adding alarm.");
+            { await Clients.Caller.SendAsync("ServerNotification", "Error adding alarm."); }
         }
 
         [HubMethodName("RemoveAlarm")]
         public async Task RemoveAlarm(Alarm alarm)
         {
             if (alarm.User == Context.User.Identity.Name)
+            {
                 if (dataBridge.RemoveAlarm(alarm))
-                    await Clients.All.SendAsync("RemovedAlarm", alarm);
+                { await Clients.All.SendAsync("RemovedAlarm", alarm); }
                 else
-                    await Clients.Caller.SendAsync("ServerNotification", "Error removing alarm.");
+                { await Clients.Caller.SendAsync("ServerNotification", "Error removing alarm."); }
+            }
         }
 
         [HubMethodName("GetAlarmLogs")]
         public async Task SendAlarmsLogs()
         {
             foreach (AlarmLog alarmLog in dataBridge.GetAlarmLogs(Context.User.Identity.Name))
+            {
                 if (alarmLog.UserSlept == Context.User.Identity.Name || alarmLog.UserWaker == Context.User.Identity.Name)
                 {
                     await Clients.Caller.SendAsync("GetAlarmLogs", alarmLog, dataBridge.GetDisplayedName(alarmLog.UserWaker), dataBridge.GetDisplayedName(alarmLog.UserSlept));
                     Thread.Sleep(DelayTime);
                 }
+            }
         }
 
-        [HubMethodName("RingAlarm")] // "GetRingtones"
+        [HubMethodName("RingAlarm")]
         public async Task PrepareToRingAlarm(int alarmID, int ringtoneID)
         {
             Alarm alarm = dataBridge.GetAlarm(alarmID);
-            DateTimeOffset temp = new DateTimeOffset(1, 1, 1, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset).AddDays(1);
-
-            Console.WriteLine(Context.User.Identity.Name + " atempted to ring alarm of user " + alarm.User + " With ringtone ID=" + ringtoneID.ToString() + ". Alarm:\n" + alarm.ToString() +
-                "\nTime marks (begin alarm, current time, exact alarm):\n" +
-            alarm.Time.AddMinutes(0 - alarm.Threshold).ToString() + " < " + temp.ToString() + " < " + alarm.Time.ToString() + ". Threshold (min.): " + alarm.Threshold.ToString());
-
-            if ((alarm.Time.AddMinutes(0 - alarm.Threshold) <= temp) && (temp <= alarm.Time))
+            alarm.Time = alarm.Time.AddYears(1).ToLocalTime();
+            DateTimeOffset currentTime = new DateTimeOffset(2, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
+            Console.WriteLine(Context.User.Identity.Name + " atempted to ring alarm of user " + alarm.User + " With ringtone ID=" + ringtoneID.ToString() + ". Alarm:\n" + alarm.ToString() + "\nTime marks (threshold, begin alarm, current time, exact alarm):\n" + "Threshold (min.): " + alarm.Threshold.ToString() + ", " + alarm.Time.AddMinutes(0 - alarm.Threshold).TimeOfDay.ToString() + " < " + currentTime.TimeOfDay.ToString() + " < " + alarm.Time.TimeOfDay.ToString());
+            if (currentTime.AddMinutes(0 - alarm.Threshold) <= alarm.Time)
             {
                 string ringer = dataBridge.GetDisplayedName(Context.User.Identity.Name);
-                if (ringer == null)
-                    ringer = Context.User.Identity.Name;
+                if (ringer == null && ringer.Length == 0)
+                { ringer = Context.User.Identity.Name; }
                 if (usersContexts.ContainsKey(alarm.User))
-                    await Clients.User(usersContexts[alarm.User].UserIdentifier).SendAsync("RingAlarm", ringtoneID, alarmID, ringer);
+                { await Clients.User(usersContexts[alarm.User].UserIdentifier).SendAsync("RingAlarm", ringtoneID, alarmID, ringer); }
                 else
-                    await Clients.Caller.SendAsync("ServerNotification", "user_not_online");
+                { await Clients.Caller.SendAsync("ServerNotification", "user_not_online"); }
             }
             else
-                await Clients.Caller.SendAsync("ServerNotification", "wrong_alarm_time");
+            { await Clients.Caller.SendAsync("ServerNotification", "wrong_alarm_time"); }
         }
 
-        [HubMethodName("IamAwake")] //Generates AlarmLog
-        public async Task CreateAlarmLog(Alarm alarm, DateTime WokeUpTime, string Waker)
+        [HubMethodName("IamAwake")]
+        public async Task CreateAlarmLog(int alarmID, string Waker)
         {
-            AlarmLog newLog = null;
+            Alarm alarm = dataBridge.GetAlarm(alarmID);
             if (alarm.User == Context.User.Identity.Name)
-                newLog = dataBridge.AddAlarmLog(alarm, WokeUpTime, Waker);
-            if (newLog != null)
             {
-                await Clients.Users(new List<string>() { newLog.UserWaker, newLog.UserSlept })
-                    .SendAsync("GetAlarmLogs", newLog, dataBridge.GetDisplayedName(newLog.UserWaker), dataBridge.GetDisplayedName(newLog.UserSlept));
+                AlarmLog newLog = dataBridge.AddAlarmLog(alarm, DateTimeOffset.Now, Waker);
+                if (newLog != null)
+                {
+                    await Clients.User(usersContexts[newLog.UserWaker].UserIdentifier).SendAsync("GetAlarmLogs", newLog, dataBridge.GetDisplayedName(newLog.UserWaker), dataBridge.GetDisplayedName(newLog.UserSlept));
+                    await Clients.User(usersContexts[newLog.UserWaker].UserIdentifier).SendAsync("GetAlarmLogs", newLog, dataBridge.GetDisplayedName(newLog.UserWaker), dataBridge.GetDisplayedName(newLog.UserSlept));
+                }
             }
         }
+
+        [HubMethodName("FinishAlarm")]
+        public async Task FinishAlarm(int alarmID)
+        {
+            Alarm alarm = dataBridge.GetAlarm(alarmID);
+            alarm.Time = alarm.Time.AddYears(1).ToLocalTime();
+            DateTimeOffset currentTime = new DateTimeOffset(2, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
+            Console.WriteLine(Context.User.Identity.Name + " atempted to finish alarm of user " + alarm.User + ". Alarm:\n" + alarm.ToString() +
+                "\nTime marks (threshold, begin alarm, current time, exact alarm):\n" + "Threshold (min.): " + alarm.Threshold.ToString() + ", " +
+                alarm.Time.AddMinutes(0 - alarm.Threshold).TimeOfDay.ToString() + " < " + currentTime.TimeOfDay.ToString() + " < " + alarm.Time.TimeOfDay.ToString());
+            if ((alarm.Time.AddMinutes(0 - alarm.Threshold) <= currentTime) && (currentTime <= alarm.Time))
+            {
+                string ringerDisplay = dataBridge.GetDisplayedName(Context.User.Identity.Name);
+                if (ringerDisplay == null && ringerDisplay.Length == 0)
+                { ringerDisplay = Context.User.Identity.Name; }
+                if (!usersContexts.ContainsKey(alarm.User))
+                { await Clients.Caller.SendAsync("ServerNotification", "user_not_online"); }
+                else
+                { await Clients.User(usersContexts[alarm.User].UserIdentifier).SendAsync("FinishAlarm", alarmID, Context.User.Identity.Name, ringerDisplay); }
+            }
+            else
+            { await Clients.Caller.SendAsync("ServerNotification", "wrong_alarm_time"); }
+        }
+
         [HubMethodName("GetRingtones")]
         public async Task SendRingtones(Alarm userToAnnoy)
         {
+            Ringtone defaultRingtone = new Ringtone
             {
-                Ringtone defaultRingtone = new Ringtone();
-                defaultRingtone.ID = 0;
-                defaultRingtone.User = userToAnnoy.User;
-                defaultRingtone.RingtoneName = "¯\\_(ツ)_/¯ ";
-                defaultRingtone.Description = "¯\\_(ツ)_/¯ ";
-                await Clients.Caller.SendAsync("GetRingtones", defaultRingtone, userToAnnoy.ID);
-                Thread.Sleep(DelayTime);
-            }
+                ID = 0,
+                User = userToAnnoy.User,
+                RingtoneName = "¯\\_(ツ)_/¯",
+                Description = "¯\\_(ツ)_/¯"
+            };
+            await Clients.Caller.SendAsync("GetRingtones", defaultRingtone, userToAnnoy.ID);
+            Thread.Sleep(DelayTime);
             foreach (Ringtone ringtone in dataBridge.GetRingtones(userToAnnoy.User))
             {
                 await Clients.Caller.SendAsync("GetRingtones", ringtone, userToAnnoy.ID);
@@ -176,7 +209,7 @@ namespace Social_Alarm_Server
                 await Clients.Caller.SendAsync("GetMyRingtone", ringtone);
             }
             else
-                await Clients.Caller.SendAsync("ServerNotification", "Error adding ringtone.");
+            { await Clients.Caller.SendAsync("ServerNotification", "Error adding ringtone."); }
         }
 
         [HubMethodName("CheckRingtone")]
@@ -185,7 +218,7 @@ namespace Social_Alarm_Server
             if (ringtone.User == Context.User.Identity.Name)
             {
                 if (dataBridge.CheckRingtone(ringtone))
-                    await Clients.Caller.SendAsync("ServerNotification", "Ringtone check ok: " + ringtone.ToString());
+                { await Clients.Caller.SendAsync("ServerNotification", "Ringtone check ok: " + ringtone.ToString()); }
                 else
                 {
                     await Clients.Caller.SendAsync("ServerNotification", "Unknown ringtone on checking (will be added): " + ringtone.ToString());
@@ -198,20 +231,17 @@ namespace Social_Alarm_Server
         [HubMethodName("RemoveRingtone")]
         public async Task RemoveRingtone(Ringtone ringtone)
         {
-            if (ringtone.User == Context.User.Identity.Name)
-            {
-                if (dataBridge.RemoveRingtone(ringtone))
-                    await Clients.Caller.SendAsync("RemovedRingtone" + ringtone);
-                else
-                    await Clients.Caller.SendAsync("ServerNotification", "Error removing alarm.");
-            }
+            if (ringtone.User == Context.User.Identity.Name && dataBridge.RemoveRingtone(ringtone))
+            { await Clients.Caller.SendAsync("RemovedRingtone" + ringtone); }
+            else
+            { await Clients.Caller.SendAsync("ServerNotification", "Error removing alarm."); }
         }
 
         [HubMethodName("ServerNotification")]
-        public async Task ServerNotification(string arg)
+        public async Task ServerNotification(string text)
         {
-            Console.WriteLine("From client:" + arg);
-            await Clients.All.SendAsync("ServerNotification", "Answer:" + arg);
+            Console.WriteLine("From client: " + text);
+            await Clients.All.SendAsync("ServerNotification", "Answer: " + text);
         }
     }
 }
