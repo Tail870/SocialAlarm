@@ -59,7 +59,9 @@ namespace Client_Android
          * Ring button action:
          * plays ringtone remotely.
          */
-        public void Ring() => ActivityMain.socialAlarm.RingAlarm(adapter.alarm.ID, adapter.Ringtones[AdapterPosition].ID);
-
+        public void Ring()
+        {
+            ActivityMain.socialAlarm.RingAlarm(adapter.alarm.ID, adapter.Ringtones[AdapterPosition].ID);
+        }
     }
 }

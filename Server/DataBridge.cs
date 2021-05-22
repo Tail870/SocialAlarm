@@ -22,13 +22,12 @@ namespace Social_Alarm_Server
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
-                //TODO Config DB.
                 optionsBuilder.UseNpgsql(
-                    "Host=localhost;" +
-                    "Port=5432;" +
-                    "Database=social_alarm;" +
-                    "Username=postgres;" +
-                    "Password=socialalarm");
+                    "Host=" + Configs.Database.Host + ";" +
+                    "Port=" + Configs.Database.Port + ";" +
+                    "Database=" + Configs.Database.DatabaseName + ";" +
+                    "Username=" + Configs.Database.Username + ";" +
+                    "Password=" + Configs.Database.Password + "");
             }
         }
 

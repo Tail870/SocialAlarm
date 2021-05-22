@@ -74,7 +74,7 @@ namespace Client_Android
                         myAlarms.Add(receivedAlarm);
                         myAlarms.Sort((a, b) => DateTimeOffset.Compare(a.Time, b.Time));
                         position = myAlarms.FindIndex(element => receivedAlarm == element);
-                        myAlarmsAdapter.NotifyItemInserted(myAlarms.IndexOf(receivedAlarm) );
+                        myAlarmsAdapter.NotifyItemInserted(myAlarms.IndexOf(receivedAlarm));
                     }
                     else
                     {

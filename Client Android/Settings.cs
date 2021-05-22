@@ -6,8 +6,7 @@ namespace Client_Android
 {
     public class Settings
     {
-
-         string StoredRingtones = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "StoredRingtones.db3");
+        private readonly string StoredRingtones = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "StoredRingtones.db3");
         public SQLiteConnection ringtonesMappingDB;
         public SocialAlarm_ClientAndroid socialAlarm;
         public List<Model_Ringtone> myRingtones { set; get; } = new List<Model_Ringtone>();
@@ -48,7 +47,7 @@ namespace Client_Android
         {
             Model_Ringtone temp = ringtonesMappingDB.Find<Model_Ringtone>(element => ringtone.ID == element.ID);
             if (temp == null)
-            {                socialAlarm.RemoveRingtone(ringtone);            }
+            { socialAlarm.RemoveRingtone(ringtone); }
         }
 
         public void SyncRingtones()
