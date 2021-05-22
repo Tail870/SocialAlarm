@@ -13,7 +13,8 @@ namespace Social_Alarm_Server
     {
         private readonly DataBridge dataBridge = new();
         private static readonly Dictionary<string, HubCallerContext> usersContexts = new();
-        private readonly int DelayTime = 100;
+        //TODO Config DelayTime.
+        private readonly int DelayTime = 0;
 
         public override async Task OnConnectedAsync()
         {

@@ -28,9 +28,7 @@ namespace Client_Android
             this.viewHolder = (ViewHolder_OthersRingtones)viewHolder;
             this.viewHolder.textViewRingtonename.Text = Ringtones[position].RingtoneName;
             if (Ringtones[position].Description != null && Ringtones[position].Description.Trim().Length > 0)
-            {
-                this.viewHolder.textViewDescription.Text = Ringtones[position].Description;
-            }
+            { this.viewHolder.textViewDescription.Text = Ringtones[position].Description; }
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -61,9 +59,7 @@ namespace Client_Android
          * Ring button action:
          * plays ringtone remotely.
          */
-        public void Ring()
-        {
-            ActivityMain.socialAlarm.RingAlarm(adapter.alarm.ID, adapter.Ringtones[AdapterPosition].ID);
-        }
+        public void Ring() => ActivityMain.socialAlarm.RingAlarm(adapter.alarm.ID, adapter.Ringtones[AdapterPosition].ID);
+
     }
 }

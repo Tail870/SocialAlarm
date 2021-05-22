@@ -80,7 +80,6 @@ namespace Client_Android
             StartActivityForResult(intent, 77);
         }
 
-
         private void SaveChanges()
         {
             if (ringtone == null)
@@ -88,7 +87,7 @@ namespace Client_Android
             ringtone.User = Preferences.Get("Login", "");
             ringtone.RingtoneName = editTextRingtoneName.Text;
             ringtone.Description = editTextDescription.Text;
-            if (ringtone.RingtoneName.Length > 0 && ringtone.File.Length > 0)
+            if (ringtone.RingtoneName.Length > 0 && ringtone.File != null)
             {
                 Intent.PutExtra("RingtoneToEdit", JsonConvert.SerializeObject(ringtone));
                 SetResult(Result.Ok, Intent);

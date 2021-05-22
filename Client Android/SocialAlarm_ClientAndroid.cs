@@ -72,14 +72,14 @@ namespace Client_Android
                     if (position == -1)
                     {
                         myAlarms.Add(receivedAlarm);
-                        myAlarms.Sort((a, b) => DateTimeOffset.Compare(a.Time.ToLocalTime(), b.Time.ToLocalTime()));
+                        myAlarms.Sort((a, b) => DateTimeOffset.Compare(a.Time, b.Time));
                         position = myAlarms.FindIndex(element => receivedAlarm == element);
-                        myAlarmsAdapter.NotifyItemInserted(myAlarms.IndexOf(receivedAlarm) + 1);
+                        myAlarmsAdapter.NotifyItemInserted(myAlarms.IndexOf(receivedAlarm) );
                     }
                     else
                     {
                         myAlarms[position] = receivedAlarm;
-                        myAlarms.Sort((a, b) => DateTimeOffset.Compare(b.Time.ToLocalTime(), a.Time.ToLocalTime()));
+                        myAlarms.Sort((a, b) => DateTimeOffset.Compare(b.Time, a.Time));
                         position = myAlarms.FindIndex(element => receivedAlarm == element);
                         myAlarmsAdapter.NotifyItemChanged(myAlarms.IndexOf(receivedAlarm));
                     }
@@ -90,13 +90,13 @@ namespace Client_Android
                     if (position == -1)
                     {
                         othersAlarms.Add(receivedAlarm);
-                        othersAlarms.Sort((a, b) => DateTimeOffset.Compare(b.Time.ToLocalTime(), a.Time.ToLocalTime()));
+                        othersAlarms.Sort((a, b) => DateTimeOffset.Compare(b.Time, a.Time));
                         othersAlarmsAdapter.NotifyItemInserted(othersAlarms.IndexOf(receivedAlarm));
                     }
                     else
                     {
                         othersAlarms[position] = receivedAlarm;
-                        othersAlarms.Sort((a, b) => DateTimeOffset.Compare(b.Time.ToLocalTime(), a.Time.ToLocalTime()));
+                        othersAlarms.Sort((a, b) => DateTimeOffset.Compare(b.Time, a.Time));
                         othersAlarmsAdapter.NotifyItemChanged(othersAlarms.IndexOf(receivedAlarm));
                     }
                 }
@@ -132,13 +132,13 @@ namespace Client_Android
                   {
                       AlarmsLogs.Add(receivedAlarmLog);
                       AlarmsLogs[position] = receivedAlarmLog;
-                      AlarmsLogs.Sort((a, b) => DateTimeOffset.Compare(b.DateTime.ToLocalTime(), a.DateTime.ToLocalTime()));
+                      AlarmsLogs.Sort((a, b) => DateTimeOffset.Compare(b.DateTime, a.DateTime));
                       AlarmsLogsAdapter.NotifyItemInserted(AlarmsLogs.IndexOf(receivedAlarmLog));
                   }
                   else
                   {
                       AlarmsLogs[position] = receivedAlarmLog;
-                      AlarmsLogs.Sort((a, b) => DateTimeOffset.Compare(b.DateTime.ToLocalTime(), a.DateTime.ToLocalTime()));
+                      AlarmsLogs.Sort((a, b) => DateTimeOffset.Compare(b.DateTime, a.DateTime));
                       AlarmsLogsAdapter.NotifyItemChanged(AlarmsLogs.IndexOf(receivedAlarmLog));
                   }
               });
@@ -147,7 +147,10 @@ namespace Client_Android
             {
                 Log.Debug("HUB: Добавлен сигнал: ", myRingtone.ToString());
                 if (myRingtone.User == Preferences.Get("Login", ""))
-                { ActivityMain.settings.AddRingtone(myRingtone); }
+                {
+                    if (!ActivityMain.settings.myRingtones.Contains(myRingtone))
+                    { ActivityMain.settings.ReceiveRingtone(myRingtone); }
+                }
             });
 
             connection.On<Model_Ringtone>("RemovedRingtone", (arg) =>
@@ -203,9 +206,9 @@ namespace Client_Android
                 Model_Alarm myAlarm = myAlarms.Find(element => element.ID == alarmID);
                 if (myAlarm != null)
                 {
-                    DateTimeOffset tempTime = myAlarm.Time.AddDays(1).ToLocalTime();
+                    DateTimeOffset tempTime = myAlarm.Time;
                     DateTimeOffset currentTime = new DateTimeOffset(1, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
-                    if ((myAlarm.Time.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
+                    if ((tempTime.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
                     {
                         if (dialog != null)
                         {
@@ -233,7 +236,7 @@ namespace Client_Android
                 {
                     DateTimeOffset tempTime = myAlarm.Time.ToLocalTime();
                     DateTimeOffset currentTime = new DateTimeOffset(1, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
-                    if ((myAlarm.Time.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
+                    if ((tempTime.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
                     {
                         Model_Ringtone ringtoneData = ActivityMain.settings.myRingtones.Find(element => element.ID == ringtoneID);
                         if (ringtoneData != null)

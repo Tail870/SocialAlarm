@@ -38,21 +38,14 @@ namespace Client_Android
             { this.viewHolder.textViewIsAlarm.Text = Application.Context.Resources.GetString(Resource.String.isReminder); }
 
             this.viewHolder.textViewTime.Text = othersAlarms[position].Time.ToLocalTime().Hour.ToString().PadLeft(2, '0') + ":" + othersAlarms[position].Time.ToLocalTime().Minute.ToString().PadLeft(2, '0');
-            DateTimeOffset tempTime = othersAlarms[position].Time.AddDays(1).AddMinutes(othersAlarms[position].Threshold);
-            this.viewHolder.textViewThreshold.Text = tempTime.ToLocalTime().Hour.ToString().PadLeft(2, '0') + ":" + tempTime.ToLocalTime().Minute.ToString().PadLeft(2, '0');
+            DateTimeOffset tempTime = othersAlarms[position].Time.AddDays(1).AddMinutes(othersAlarms[position].Threshold).ToLocalTime();
+            this.viewHolder.textViewThreshold.Text = tempTime.Hour.ToString().PadLeft(2, '0') + ":" + tempTime.Minute.ToString().PadLeft(2, '0');
             if (othersAlarms[position].Description != null && othersAlarms[position].Description.Trim().Length > 0)
-            {
-                this.viewHolder.textViewDescription.Text = othersAlarms[position].Description;
-            }
-
+            { this.viewHolder.textViewDescription.Text = othersAlarms[position].Description; }
             if (othersAlarms[position].DisplayedName != null && othersAlarms[position].DisplayedName.Trim().Length > 0)
-            {
-                this.viewHolder.textViewUsername.Text = othersAlarms[position].DisplayedName.Trim();
-            }
+            { this.viewHolder.textViewUsername.Text = othersAlarms[position].DisplayedName.Trim(); }
             else
-            {
-                this.viewHolder.textViewUsername.Text = othersAlarms[position].User;
-            }
+            { this.viewHolder.textViewUsername.Text = othersAlarms[position].User; }
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)

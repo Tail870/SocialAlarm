@@ -18,7 +18,6 @@ namespace Client_Android
         private Button buttonAdd { get; set; }
         private Button buttonSave { get; set; }
         private Button buttonCancel { get; set; }
-        private Adapter_MyRingtones MyRingtonesAdapter { get; set; }
 
         private RecyclerView recyclerView;
 
@@ -34,10 +33,10 @@ namespace Client_Android
                 // ReverseLayout = true,
                 // StackFromEnd = true
             });
-            MyRingtonesAdapter = new Adapter_MyRingtones(ActivityMain.settings.myRingtones, this);
+            ActivityMain.settings.MyRingtonesAdapter = new Adapter_MyRingtones(ActivityMain.settings.myRingtones, this);
 
-            recyclerView.SetAdapter(MyRingtonesAdapter);
-            MyRingtonesAdapter.NotifyDataSetChanged();
+            recyclerView.SetAdapter(ActivityMain.settings.MyRingtonesAdapter);
+            ActivityMain.settings.MyRingtonesAdapter.NotifyDataSetChanged();
 
             editTextLogin = FindViewById<EditText>(Resource.Id.editTextLogin);
             editTextLogin.Text = Preferences.Get("Login", "");
@@ -51,9 +50,13 @@ namespace Client_Android
             buttonAdd = FindViewById<Button>(Resource.Id.buttonAdd);
             buttonAdd.Click += (e, o) => AddPersonalRingtone();
             buttonSave = FindViewById<Button>(Resource.Id.buttonSave);
-            buttonSave.Click += (e, o) => SaveSettingsAsync();
+            buttonSave.Click += (e, o) => SaveSettings();
             buttonCancel = FindViewById<Button>(Resource.Id.buttonCancel);
-            buttonCancel.Click += (e, o) => Finish();
+            buttonCancel.Click += (e, o) =>
+            {
+                ActivityMain.socialAlarm.GetMyRingtones();
+                Finish();
+            };
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
@@ -63,16 +66,16 @@ namespace Client_Android
                 switch (requestCode)
                 {
                     case 2:
-                        ActivityMain.settings.AddRingtone(JsonConvert.DeserializeObject<Model_Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
-                        recyclerView.ScrollToPosition(ActivityMain.settings.myRingtones.Count + 1);
+                        ActivityMain.socialAlarm.AddChangeRingtone(JsonConvert.DeserializeObject<Model_Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
+                        recyclerView.ScrollToPosition(ActivityMain.settings.myRingtones.Count);
                         break;
                     case 3:
                         int position = intent.GetIntExtra("AlarmPosition", 0);
-                        ActivityMain.settings.AddRingtone(JsonConvert.DeserializeObject<Model_Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
-                        MyRingtonesAdapter.NotifyItemChanged(position);
+                        ActivityMain.socialAlarm.AddChangeRingtone(JsonConvert.DeserializeObject<Model_Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
+                        ActivityMain.settings.MyRingtonesAdapter.NotifyItemChanged(position);
                         break;
                 }
-                MyRingtonesAdapter.NotifyDataSetChanged();
+                ActivityMain.settings.MyRingtonesAdapter.NotifyDataSetChanged();
             }
         }
 
@@ -82,7 +85,7 @@ namespace Client_Android
             StartActivityForResult(intent, 2);
         }
 
-        private async System.Threading.Tasks.Task SaveSettingsAsync()
+        private void SaveSettings()
         {
             Preferences.Set("Login", editTextLogin.Text);
             Preferences.Set("Password", editTextPassword.Text);

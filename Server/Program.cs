@@ -7,16 +7,18 @@ namespace Social_Alarm_Server
     {
         public static void Main(string[] args)
         {
+            //TODO Config load.
             CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-{
-    webBuilder.UseStartup<Startup>();
-    webBuilder.UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:5001");
-});
+            {
+                webBuilder.UseStartup<Startup>();
+                //TODO Url configs.
+                webBuilder.UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:5001");
+            });
         }
     }
 }

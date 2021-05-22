@@ -41,10 +41,8 @@ namespace Social_Alarm_Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapHub<SocialAlarm_Server>("/SocialAlarm");
-                });
+                //TODO Config endpoint
+                app.UseEndpoints(endpoints => endpoints.MapHub<SocialAlarm_Server>("/SocialAlarm"));
             });
         }
     }

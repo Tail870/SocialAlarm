@@ -22,7 +22,7 @@ namespace Social_Alarm_Server
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
-                //TODO Store settings for DB connecting!
+                //TODO Config DB.
                 optionsBuilder.UseNpgsql(
                     "Host=localhost;" +
                     "Port=5432;" +
@@ -33,7 +33,7 @@ namespace Social_Alarm_Server
         }
 
         // This method used to check user's credentials.
-        //TODO Complete auth mechanism
+        //TODO encrypt.
         public bool AuthCheck(string username, string password)
         {
             DataBaseContext context = new();
@@ -122,11 +122,21 @@ namespace Social_Alarm_Server
 
         public Alarm GetAlarm(int id)
         {
-            DataBaseContext context = new();
-            Alarm alarm = context.Alarms.Where(element => element.ID == id).First();
-            if (alarm.Threshold > 1440)
-            { alarm.Threshold = 1440; }
-            return alarm;
+            try
+            {
+                DataBaseContext context = new();
+                Alarm alarm = context.Alarms.Where(element => element.ID == id).First();
+                if (alarm.Threshold > 1440)
+                { alarm.Threshold = 1440; }
+                return alarm;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("/------------GetAlarm------------\\");
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("\\------------GetAlarm------------/");
+                return null;
+            }
         }
 
         public bool RemoveAlarm(Alarm alarm)
@@ -202,9 +212,9 @@ namespace Social_Alarm_Server
             }
             catch (Exception ex)
             {
-                Console.WriteLine("/------------AddRingtone------------\\");
+                Console.WriteLine("/------------RemoveRingtone------------\\");
                 Console.WriteLine(ex.ToString());
-                Console.WriteLine("\\------------AddRingtone------------/");
+                Console.WriteLine("\\------------RemoveRingtone------------/");
                 return false;
             }
             return true;

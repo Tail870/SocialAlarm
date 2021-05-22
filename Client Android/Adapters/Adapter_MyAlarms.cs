@@ -36,9 +36,10 @@ namespace Client_Android
             { this.viewHolder.textViewIsAlarm.Text = Application.Context.Resources.GetString(Resource.String.isAlarm); }
             else
             { this.viewHolder.textViewIsAlarm.Text = Application.Context.Resources.GetString(Resource.String.isReminder); }
-            this.viewHolder.textViewTime.Text = myAlarms[position].Time.ToLocalTime().Hour.ToString().PadLeft(2, '0') + ":" + myAlarms[position].Time.ToLocalTime().Minute.ToString().PadLeft(2, '0');
-            DateTimeOffset tempTime = myAlarms[position].Time.AddDays(1).AddMinutes(-myAlarms[position].Threshold);
-            this.viewHolder.textViewThreshold.Text = tempTime.ToLocalTime().Hour.ToString().PadLeft(2, '0') + ":" + tempTime.ToLocalTime().Minute.ToString().PadLeft(2, '0');
+            DateTimeOffset tempTime = myAlarms[position].Time.AddDays(1).ToLocalTime();
+            this.viewHolder.textViewTime.Text = tempTime.Hour.ToString().PadLeft(2, '0') + ":" + tempTime.Minute.ToString().PadLeft(2, '0');
+            tempTime = tempTime.AddMinutes(-myAlarms[position].Threshold);
+            this.viewHolder.textViewThreshold.Text = tempTime.Hour.ToString().PadLeft(2, '0') + ":" + tempTime.Minute.ToString().PadLeft(2, '0');
             if (myAlarms[position].Description != null && myAlarms[position].Description.Trim().Length > 0)
             { this.viewHolder.textViewDescription.Text = myAlarms[position].Description; }
         }

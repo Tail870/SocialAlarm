@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.OS;
 using Android.Text.Format;
+using Android.Util;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using Newtonsoft.Json;
@@ -55,31 +56,29 @@ namespace Client_Android
                 timePicker.Hour = time.Hour;
                 timePicker.Minute = time.Minute;
                 time = time.AddMinutes(-alarm.Threshold);
-                timePickerThreshold.Hour = alarm.Time.Hour;
-                timePickerThreshold.Minute = alarm.Time.Minute;
+                timePickerThreshold.Hour = time.Hour;
+                timePickerThreshold.Minute = time.Minute;
             }
         }
 
         private void SaveChanges()
         {
             if (alarm == null)
-            {
-                alarm = new Model_Alarm();
-            }
+            { alarm = new Model_Alarm(); }
             alarm.User = Preferences.Get("Login", "");
             alarm.IsWaker = toggleButtonIsWaker.Checked;
             alarm.Description = editTextDescription.Text;
 
             int timeStart = (timePickerThreshold.Hour * 60) + timePickerThreshold.Minute;
             int timeEnd = (timePicker.Hour * 60) + timePicker.Minute;
-
             // Check if starting alarm time less than it's ending
             if (timeStart < timeEnd)
             { alarm.Threshold = timeEnd - timeStart; }
             // If not - correct the threshold (min.) variable
             else
-            { alarm.Threshold = 1440 - (timeEnd - timeStart); }
+            { alarm.Threshold = 1440 - (timeStart - timeEnd); }
             alarm.Time = new DateTimeOffset(2, 2, 2, timePicker.Hour, timePicker.Minute, 0, DateTimeOffset.Now.Offset);
+            Log.Debug("HUB: New|Edited alarm: ", alarm.ToString());
             Intent.PutExtra("AlarmToEdit", JsonConvert.SerializeObject(alarm));
             SetResult(Result.Ok, Intent);
             Finish();
