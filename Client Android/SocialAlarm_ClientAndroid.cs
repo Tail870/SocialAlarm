@@ -200,7 +200,7 @@ namespace Client_Android
                 Toast.MakeText(Application.Context, Application.Context.Resources.GetString(Resource.String.user_woke_up), ToastLength.Long).Show();
             });
 
-            connection.On<int, string, string>("FinishAlarm", async (alarmID, ringer, ringerDisplay) =>
+            connection.On<int, string, string>("FinishAlarm", (alarmID, ringer, ringerDisplay) =>
             {
                 Log.Debug("HUB: ", "Finish alarm atempt... ");
                 Model_Alarm myAlarm = myAlarms.Find(element => element.ID == alarmID);

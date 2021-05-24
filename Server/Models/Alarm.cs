@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataModels
+namespace Models
 {
     public class Alarm
     {

@@ -4,11 +4,11 @@
     {
         //TODO Config loading from file.
 
+        public static bool RegistrationEnabled { set; get; } = true;
         public static int DelayTime { set; get; } = 0;
         public static string Endpoint { set; get; } = "/SocialAlarm";
         public static string[] URLs { set; get; } = {
-            "http://0.0.0.0:5000",
-            "https://0.0.0.0:5001" };
+            "http://0.0.0.0:5000"};
 
         public class Database
         {

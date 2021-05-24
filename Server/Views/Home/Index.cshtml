@@ -1,0 +1,41 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{    string Msg = ViewBag.String;}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Социальный Будильник - форма регистрации</title>
+    <style>
+        div {
+            text-align: center;
+            width: 2000px;
+            position: fixed;
+            left: 50%;
+            margin-left: -1000px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>@Msg</h1>
+        <h2>Форма регистрации</h2>
+        <form method="post" enctype="multipart/form-data" id="reg">
+            <p>Логин:</p>
+            <input type="text" name="Login" required />
+            <p>Новый пароль:</p>
+            <input type="password"name="Password" required />
+            <p>Отображаемое имя:</p>
+            <input type="text"  name="DisplayedName" />
+            <p>Дполнительные данные (например, метод связи):</p>
+            <textarea type="text" name="Contacts" form="reg"></textarea>
+            <p>Старый пароль (если изменяется аккаунт):</p>
+            <input type="password"  name="OldPassword" />
+            <p></p>
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+
+</body>
+</html>

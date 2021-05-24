@@ -119,16 +119,16 @@
     <Compile Include="Activities\ActivityRing.cs" />
     <Compile Include="Adapters\Adapter_OthersRingtones.cs" />
     <Compile Include="Adapters\Adapter_MyRingtones.cs" />
-    <Compile Include="Data Models\Model_AlarmLog.cs" />
+    <Compile Include="Models\Model_AlarmLog.cs" />
     <Compile Include="Adapters\Adapter_AlarmsLogs.cs" />
     <Compile Include="Adapters\Adapter_OthersAlarms.cs" />
     <Compile Include="Adapters\Adapter_MyAlarms.cs" />
     <Compile Include="Activities\ActivityMain.cs" />
-    <Compile Include="Data Models\Model_Alarm.cs" />
+    <Compile Include="Models\Model_Alarm.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Activities\ActivitySettings.cs" />
-    <Compile Include="Data Models\Model_Ringtone.cs" />
+    <Compile Include="Models\Model_Ringtone.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SocialAlarm_ClientAndroid.cs" />
   </ItemGroup>

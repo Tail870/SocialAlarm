@@ -1,12 +1,12 @@
-﻿using DataModels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Models;
 using System;
 using System.Linq;
 
 namespace Social_Alarm_Server
 {
-    public class DataBridge
+    public class DataBridgeSocialAlarm
     {
         public class DataBaseContext : DbContext
         {

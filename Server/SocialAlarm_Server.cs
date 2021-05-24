@@ -1,6 +1,6 @@
-﻿using DataModels;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -11,7 +11,7 @@ namespace Social_Alarm_Server
     [Authorize]
     public class SocialAlarm_Server : Hub
     {
-        private readonly DataBridge dataBridge = new();
+        private readonly DataBridgeSocialAlarm dataBridge = new();
         private static readonly Dictionary<string, HubCallerContext> usersContexts = new();
         private readonly int DelayTime = Configs.DelayTime;
 
@@ -42,7 +42,7 @@ namespace Social_Alarm_Server
             { Context.Abort(); }
         }
 
-        public override async Task OnDisconnectedAsync(Exception ex)
+        public override Task OnDisconnectedAsync(Exception ex)
         {
             if (usersContexts.TryGetValue(Context.User.Identity.Name, out HubCallerContext temp))
             {
@@ -58,6 +58,8 @@ namespace Social_Alarm_Server
             }
             else
             { Console.WriteLine("No users connected."); }
+
+            return Task.CompletedTask;
         }
 
         [HubMethodName("GetAlarms")]
