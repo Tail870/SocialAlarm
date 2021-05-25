@@ -236,6 +236,8 @@ namespace Client_Android
                 {
                     DateTimeOffset tempTime = myAlarm.Time.ToLocalTime();
                     DateTimeOffset currentTime = new DateTimeOffset(1, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
+                    Console.WriteLine("Time marks (threshold, begin alarm, current time, exact alarm):\n" + "Threshold (min.): " + myAlarm.Threshold.ToString() + ", " + myAlarm.Time.AddMinutes(0 - myAlarm.Threshold).TimeOfDay.ToString() + " < " + currentTime.TimeOfDay.ToString() + " < " + myAlarm.Time.TimeOfDay.ToString());
+
                     if ((tempTime.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
                     {
                         Model_Ringtone ringtoneData = ActivityMain.settings.myRingtones.Find(element => element.ID == ringtoneID);

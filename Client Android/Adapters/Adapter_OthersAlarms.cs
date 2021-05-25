@@ -38,7 +38,7 @@ namespace Client_Android
             { this.viewHolder.textViewIsAlarm.Text = Application.Context.Resources.GetString(Resource.String.isReminder); }
 
             this.viewHolder.textViewTime.Text = othersAlarms[position].Time.ToLocalTime().Hour.ToString().PadLeft(2, '0') + ":" + othersAlarms[position].Time.ToLocalTime().Minute.ToString().PadLeft(2, '0');
-            DateTimeOffset tempTime = othersAlarms[position].Time.AddDays(1).AddMinutes(othersAlarms[position].Threshold).ToLocalTime();
+            DateTimeOffset tempTime = othersAlarms[position].Time.AddDays(1).AddMinutes(-othersAlarms[position].Threshold).ToLocalTime();
             this.viewHolder.textViewThreshold.Text = tempTime.Hour.ToString().PadLeft(2, '0') + ":" + tempTime.Minute.ToString().PadLeft(2, '0');
             if (othersAlarms[position].Description != null && othersAlarms[position].Description.Trim().Length > 0)
             { this.viewHolder.textViewDescription.Text = othersAlarms[position].Description; }
