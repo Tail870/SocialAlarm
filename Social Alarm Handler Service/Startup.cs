@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 
-namespace Social_Alarm_Server
+namespace Social_Alarm
 {
     public class Startup
     {

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Social_Alarm_Server
+namespace Social_Alarm
 {
     public class Program
     {

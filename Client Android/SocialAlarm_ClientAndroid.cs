@@ -157,7 +157,7 @@ namespace Client_Android
             {
                 if (arg.User == Preferences.Get("Login", ""))
                 {
-                    Log.Debug("HUB: Удалён рингтог: ", arg.ToString());
+                    Log.Debug("HUB: Удалён рингтон: ", arg.ToString());
                     int position = ActivityMain.settings.myRingtones.FindIndex(element => arg.ID == element.ID);
                     if (position != -1)
                     {

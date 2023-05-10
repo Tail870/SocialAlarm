@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Models;
-using Social_Alarm_Server;
+using Social_Alarm.Models;
 using System;
 using System.Linq;
 

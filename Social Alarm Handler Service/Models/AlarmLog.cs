@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Models
+namespace Social_Alarm.Models
 {
     public class AlarmLog
     {

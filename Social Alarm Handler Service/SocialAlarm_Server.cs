@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using Models;
+using Social_Alarm.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Social_Alarm_Server
+namespace Social_Alarm
 {
     [Authorize]
     public class SocialAlarm_Server : Hub
@@ -118,7 +118,7 @@ namespace Social_Alarm_Server
             DateTimeOffset tempTime = alarm.Time.AddYears(1).ToLocalTime();
             DateTimeOffset currentTime = new DateTimeOffset(2, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
             Console.WriteLine(Context.User.Identity.Name + " atempted to ring alarm of user " + alarm.User + " With ringtone ID=" + ringtoneID.ToString() + ". Alarm:\n" + alarm.ToString() + "\nTime marks (threshold, begin alarm, current time, exact alarm):\n" + "Threshold (min.): " + alarm.Threshold.ToString() + ", " + alarm.Time.AddMinutes(0 - alarm.Threshold).TimeOfDay.ToString() + " < " + currentTime.TimeOfDay.ToString() + " < " + alarm.Time.TimeOfDay.ToString());
-            if ((tempTime.AddMinutes(0 - alarm.Threshold) <= currentTime) && (currentTime <= tempTime))
+            if (tempTime.AddMinutes(0 - alarm.Threshold) <= currentTime && currentTime <= tempTime)
             {
                 string ringer = dataBridge.GetDisplayedName(Context.User.Identity.Name);
                 if (ringer == null && ringer.Length == 0)
@@ -156,7 +156,7 @@ namespace Social_Alarm_Server
             Console.WriteLine(Context.User.Identity.Name + " atempted to finish alarm of user " + alarm.User + ". Alarm:\n" + alarm.ToString() +
                 "\nTime marks (threshold, begin alarm, current time, exact alarm):\n" + "Threshold (min.): " + alarm.Threshold.ToString() + ", " +
                 alarm.Time.AddMinutes(0 - alarm.Threshold).TimeOfDay.ToString() + " < " + currentTime.TimeOfDay.ToString() + " < " + alarm.Time.TimeOfDay.ToString());
-            if ((alarm.Time.AddMinutes(0 - alarm.Threshold) <= currentTime) && (currentTime <= alarm.Time))
+            if (alarm.Time.AddMinutes(0 - alarm.Threshold) <= currentTime && currentTime <= alarm.Time)
             {
                 string ringerDisplay = dataBridge.GetDisplayedName(Context.User.Identity.Name);
                 if (ringerDisplay == null && ringerDisplay.Length == 0)

@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Models;
+using Social_Alarm.Models;
 using System;
 using System.Linq;
 
-namespace Social_Alarm_Server
+namespace Social_Alarm
 {
     public class DataBridgeSocialAlarm
     {
@@ -222,7 +222,7 @@ namespace Social_Alarm_Server
         public IQueryable<AlarmLog> GetAlarmLogs(string Participator)
         {
             DataBaseContext context = new();
-            return context.AlarmLogs.Where(AlarmLog => (AlarmLog.UserSlept == Participator) || (AlarmLog.UserWaker == Participator));
+            return context.AlarmLogs.Where(AlarmLog => AlarmLog.UserSlept == Participator || AlarmLog.UserWaker == Participator);
         }
 
         public AlarmLog AlarmToLog(Alarm alarm, DateTimeOffset WokeUpTime, string Waker)

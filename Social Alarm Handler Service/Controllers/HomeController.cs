@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Models;
+using Social_Alarm.Models;
 
 namespace Social_Alarm.Controllers
 {
