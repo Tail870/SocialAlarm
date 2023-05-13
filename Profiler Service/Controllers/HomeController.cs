@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Social_Alarm.Models;
+using Profiler_Service.Models;
 
-namespace Social_Alarm.Controllers
+namespace Profiler_Service.Controllers
 {
     public class HomeController : Controller
     {

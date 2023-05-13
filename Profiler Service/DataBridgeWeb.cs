@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Social_Alarm.Models;
+using Profiler_Service.Models;
 using System;
 using System.Linq;
 
-namespace Social_Alarm
+namespace Profiler_Service
 {
     public class DataBridgeWeb
     {
