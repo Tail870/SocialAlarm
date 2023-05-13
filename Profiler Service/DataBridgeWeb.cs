@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Profiler_Service.Models;
-using System;
-using System.Linq;
+using System.Web.Helpers;
 
 namespace Profiler_Service
 {
@@ -30,12 +29,15 @@ namespace Profiler_Service
         public int AddUser(User user)
         {
             int code = -1;
-            User addedUser = null;
+            User? addedUser = null;
             try
             {
                 DataBaseContext context = new();
-                if (context.Users.Where(element => element.Login == user.Login).Count() > 0)
+                if (context.Users.Where(element => element.Login == user.Login).Count() == 1)
                 { code = 1; }
+                else
+                if (context.Users.Where(element => element.Login == user.Login).Count() > 1)
+                { code = 2; }
                 else
                 {
                     addedUser = context.Users.Add(user).Entity;
@@ -47,9 +49,9 @@ namespace Profiler_Service
             }
             catch (Exception ex)
             {
-                Console.WriteLine("/------------AddUser------------\\");
+                Console.WriteLine("/------------ERROR IN: AddUser------------\\");
                 Console.WriteLine(ex.ToString());
-                Console.WriteLine("\\------------AddUser------------/");
+                Console.WriteLine("\\------------ERROR IN: AddUser------------/");
                 return code;
             }
         }
@@ -61,24 +63,31 @@ namespace Profiler_Service
             try
             {
                 DataBaseContext context = new();
-                if (context.Users.Where(element => element.Login == user.Login && element.Password == OldPassword).Count() > 0)
+                List<User> users = context.Users.AsNoTracking().Where(element => element.Login == user.Login).ToList();
+                if (users.Count == 1)
                 {
+                    // Verify password HASH
+                    Crypto.VerifyHashedPassword(users.Where(element => element.Login == user.Login).ElementAt(0).Password, user.Password);
                     Console.WriteLine("Changing user...");
-                    Console.WriteLine("Old: " + user.ToString());
+                    Console.WriteLine("Old account:\n" + users[0].ToString());
                     addedUser = context.Users.Update(user).Entity;
-                    Console.WriteLine("New: " + addedUser.ToString());
+                    Console.WriteLine("New account:\n" + addedUser.ToString());
                     context.SaveChanges();
                     code = 0;
                 }
                 else
-                { code = 1; }
+                if (users.Count > 1)
+                { code = 2; }
+                else
+                if (users.Count == 0)
+                { code = 3; }
                 return code;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("/------------ChangeUser------------\\");
+                Console.WriteLine("/------------ERROR IN: ChangeUser------------\\");
                 Console.WriteLine(ex.ToString());
-                Console.WriteLine("\\------------ChangeUser------------/");
+                Console.WriteLine("\\------------ERROR IN: ChangeUser------------/");
                 return code;
             }
         }

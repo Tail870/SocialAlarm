@@ -116,7 +116,7 @@ namespace Social_Alarm
         {
             Alarm alarm = dataBridge.GetAlarm(alarmID);
             DateTimeOffset tempTime = alarm.Time.AddYears(1).ToLocalTime();
-            DateTimeOffset currentTime = new DateTimeOffset(2, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
+            DateTimeOffset currentTime = new(2, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
             Console.WriteLine(Context.User.Identity.Name + " atempted to ring alarm of user " + alarm.User + " With ringtone ID=" + ringtoneID.ToString() + ". Alarm:\n" + alarm.ToString() + "\nTime marks (threshold, begin alarm, current time, exact alarm):\n" + "Threshold (min.): " + alarm.Threshold.ToString() + ", " + alarm.Time.AddMinutes(0 - alarm.Threshold).TimeOfDay.ToString() + " < " + currentTime.TimeOfDay.ToString() + " < " + alarm.Time.TimeOfDay.ToString());
             if (tempTime.AddMinutes(0 - alarm.Threshold) <= currentTime && currentTime <= tempTime)
             {
@@ -152,7 +152,7 @@ namespace Social_Alarm
         {
             Alarm alarm = dataBridge.GetAlarm(alarmID);
             alarm.Time = alarm.Time.AddYears(1).ToLocalTime();
-            DateTimeOffset currentTime = new DateTimeOffset(2, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
+            DateTimeOffset currentTime = new(2, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
             Console.WriteLine(Context.User.Identity.Name + " atempted to finish alarm of user " + alarm.User + ". Alarm:\n" + alarm.ToString() +
                 "\nTime marks (threshold, begin alarm, current time, exact alarm):\n" + "Threshold (min.): " + alarm.Threshold.ToString() + ", " +
                 alarm.Time.AddMinutes(0 - alarm.Threshold).TimeOfDay.ToString() + " < " + currentTime.TimeOfDay.ToString() + " < " + alarm.Time.TimeOfDay.ToString());
@@ -173,7 +173,7 @@ namespace Social_Alarm
         [HubMethodName("GetRingtones")]
         public async Task SendRingtones(Alarm userToAnnoy)
         {
-            Ringtone defaultRingtone = new Ringtone
+            Ringtone defaultRingtone = new()
             {
                 ID = 0,
                 User = userToAnnoy.User,

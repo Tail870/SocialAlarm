@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace Profiler_Service
+﻿namespace Profiler_Service
 {
     public class Startup
     {
@@ -25,6 +23,7 @@ namespace Profiler_Service
         {
             if (env.IsDevelopment())
             { app.UseDeveloperExceptionPage(); }
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseRouting();

@@ -18,7 +18,7 @@ namespace Profiler_Service.Models
         public override string ToString()
         {
             return "Login: " + Login + "; " +
-                "Password: " + "***" + "; " +
+                "Password: " + Password + "; " +
                 "Displayed name: " + DisplayedName + "; " +
                 "contacts: " + Contacts;
         }

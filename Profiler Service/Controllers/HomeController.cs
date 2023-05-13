@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Profiler_Service.Models;
+using System.Web.Helpers;
 
 namespace Profiler_Service.Controllers
 {
@@ -8,17 +9,19 @@ namespace Profiler_Service.Controllers
         public const string Registered = "Пользователь успешно зарегистрирован!";
         public const string Changed = "Пользователь успешно изменён!";
         public const string Exists = "Пользователь уже существует!";
+        public const string NonExists = "Пользователь не существует!";
         public const string WrongPass = "Неверный старый пароль!";
         public const string Error = "Ошибка при регистрации! Проверьте введённые данные.";
+        public const string DBError = "Ошибка базы данных!";
 
         public string Msg { get; set; } = "";
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string OldPassword { get; set; }
-        public string DisplayedName { get; set; }
-        public string Contacts { set; get; }
+        public string Login { get; set; } = "";
+        public string Password { get; set; } = "";
+        public string OldPassword { get; set; } = "";
+        public string DisplayedName { get; set; } = "";
+        public string Contacts { set; get; } = "";
 
-        private readonly DataBridgeWeb usersDB = new DataBridgeWeb();
+        private readonly DataBridgeWeb usersDB = new();
 
         public ActionResult Index()
         {
@@ -31,11 +34,14 @@ namespace Profiler_Service.Controllers
         {
             if (Login != null && Login.Length > 0 && Password != null && Password.Length > 0)
             {
-                User registering = new();
-                registering.Login = Login;
-                registering.Password = Password;
-                registering.DisplayedName = DisplayedName;
-                registering.Contacts = Contacts;
+                User registering = new()
+                {
+                    Login = Login,
+                    // HASH password
+                    Password = Crypto.HashPassword(Password),
+                    DisplayedName = DisplayedName,
+                    Contacts = Contacts
+                };
                 if (OldPassword != null && OldPassword.Length > 0)
                 {
                     switch (usersDB.ChangeUser(registering, OldPassword))
@@ -45,6 +51,12 @@ namespace Profiler_Service.Controllers
                             break;
                         case 1:
                             Msg = WrongPass;
+                            break;
+                        case 2:
+                            Msg = DBError;
+                            break;
+                        case 3:
+                            Msg = NonExists;
                             break;
                         case -1:
                             Msg = Error;
@@ -60,6 +72,9 @@ namespace Profiler_Service.Controllers
                             break;
                         case 1:
                             Msg = Exists;
+                            break;
+                        case 2:
+                            Msg = DBError;
                             break;
                         case -1:
                             Msg = Error;

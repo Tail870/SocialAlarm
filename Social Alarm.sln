@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Social Alarm Handler Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client Android", "Client Android\Client Android.csproj", "{3BC3257D-578E-492D-897C-C4A3B10F5E6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Profiler Service", "Profiler Service\Profiler Service.csproj", "{97D14AF0-8E4C-4D1A-99D9-3FEC977168F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Profiler Service", "Profiler Service\Profiler Service.csproj", "{97D14AF0-8E4C-4D1A-99D9-3FEC977168F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

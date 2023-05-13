@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Social_Alarm.Models;
 using System;
 using System.Linq;
+using System.Web.Helpers;
 
 namespace Social_Alarm
 {
@@ -40,7 +41,7 @@ namespace Social_Alarm
             if (ConnectingUser != null)
             {
                 Console.WriteLine("User: " + ConnectingUser.DisplayedName + " (login: " + ConnectingUser.Login + ")");
-                if (ConnectingUser.Password == password)
+                if (Crypto.VerifyHashedPassword(ConnectingUser.Password, password))
                 {
                     Console.WriteLine(username + " - correct password.");
                     return true;
@@ -84,7 +85,7 @@ namespace Social_Alarm
             try
             {
                 DataBaseContext context = new();
-                if (context.Alarms.Where(element => element.ID == addedAlarm.ID).Count() > 0)
+                if (context.Alarms.Where(element => element.ID == addedAlarm.ID).Any())
                 { context.Alarms.Update(addedAlarm); }
                 else
                 { context.Alarms.Add(addedAlarm); }
@@ -163,7 +164,7 @@ namespace Social_Alarm
             try
             {
                 DataBaseContext context = new();
-                if (context.Ringtones.Where(element => element.ID == ringtone.ID).Count() > 0)
+                if (context.Ringtones.Where(element => element.ID == ringtone.ID).Any())
                 { addedRingtone = context.Ringtones.Update(ringtone); }
                 else
                 { addedRingtone = context.Ringtones.Add(ringtone); }
@@ -194,7 +195,7 @@ namespace Social_Alarm
         public bool CheckRingtone(Ringtone ringtone)
         {
             DataBaseContext context = new();
-            if (context.Ringtones.Where(element => element == ringtone).Count() > 0)
+            if (context.Ringtones.Where(element => element == ringtone).Any())
             { return true; }
             else
             { return false; }
@@ -227,12 +228,14 @@ namespace Social_Alarm
 
         public AlarmLog AlarmToLog(Alarm alarm, DateTimeOffset WokeUpTime, string Waker)
         {
-            AlarmLog alarmLog = new();
-            alarmLog.UserSlept = alarm.User;
-            alarmLog.UserWaker = Waker;
-            alarmLog.Description = alarm.Description;
-            alarmLog.DateTime = WokeUpTime;
-            alarmLog.IsWaker = alarm.IsWaker;
+            AlarmLog alarmLog = new()
+            {
+                UserSlept = alarm.User,
+                UserWaker = Waker,
+                Description = alarm.Description,
+                DateTime = WokeUpTime,
+                IsWaker = alarm.IsWaker
+            };
             return alarmLog;
         }
 

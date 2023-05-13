@@ -4,6 +4,7 @@ using Android.Util;
 using Android.Widget;
 using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.LocalNotification;
+using Plugin.LocalNotification.AndroidOption;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -210,10 +211,11 @@ namespace Client_Android
                     DateTimeOffset currentTime = new DateTimeOffset(1, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
                     if ((tempTime.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
                     {
-                        if (dialog != null)
-                        {
-                            dialog.Dismiss();
-                        }
+                        //if (dialog != null)
+                        //{
+                        //    dialog.Dismiss();
+                        //}
+                        dialog?.Dismiss();
 
                         dialog = new AlertDialog.Builder(activity)
                             .SetNegativeButton(Application.Context.Resources.GetString(Resource.String.no), (c, ev) => { })
@@ -261,11 +263,11 @@ namespace Client_Android
                         NotificationCenter.Current.Show((notification) => notification
                                         .WithTitle(ringer + " " + Application.Context.Resources.GetString(Resource.String.rang))
                                         .WithDescription(Application.Context.Resources.GetString(Resource.String.alarm_description) + "\n" + myAlarm.Description)
-                                        .WithBadgeCount(ringNotificationCounter)
+                                        .WithBadgeNumber(ringNotificationCounter)
                                          .WithNotificationId(ringNotificationCounter)
                                         .WithAndroidOptions((android) => android
                                             .WithChannelId("social_alarm")
-                                            .WithIconName("ic_my_alarms_black_24dp")
+                                            .WithIconSmallName(new AndroidIcon("ic_my_alarms_black_24dp"))
                                         .Build())
                                         .Create());
                         ringNotificationCounter++;

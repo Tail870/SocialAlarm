@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Threading.Tasks;
 
 namespace Social_Alarm
@@ -36,6 +37,7 @@ namespace Social_Alarm
         {
             if (env.IsDevelopment())
             { app.UseDeveloperExceptionPage(); }
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseRouting();
