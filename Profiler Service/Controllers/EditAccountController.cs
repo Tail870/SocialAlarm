@@ -7,7 +7,7 @@ namespace Profiler_Service.Controllers
     public class EditAccountController : Controller
     {
         public const string Changed = "Пользователь успешно изменён!";
-        public const string NonExists = "Пользователь не существует!";
+        public const string NonExists = "Пользователя не существует!";
         public const string WrongPass = "Неверный старый пароль!";
         public const string Error = "Ошибка при изменении учётной записи! Проверьте введённые данные.";
         public const string DBError = "Ошибка базы данных!";
@@ -28,12 +28,18 @@ namespace Profiler_Service.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string Login, string NewPassword, string OldPassword, string DisplayedName, string Contacts)
+        public ActionResult Index(string? Login, string? NewPassword, string? OldPassword, string? DisplayedName, string? Contacts)
         {
             if (Login != null && Login.Length != 0)
             {
                 if (NewPassword == null)
                     NewPassword = OldPassword;
+                if (Login == null || OldPassword == null || DisplayedName == null)
+                {
+                    Msg = Error;
+                    ViewBag.String = Msg;
+                    return View();
+                }
                 User registering = new()
                 {
                     Login = Login,
@@ -72,6 +78,21 @@ namespace Profiler_Service.Controllers
                 Msg = Error;
             ViewBag.String = Msg;
             return View();
+        }
+        [HttpPost]
+        public ActionResult Create(FormCollection collection)
+        {
+            try
+            {
+                ViewData["Login"] = collection["Login"];
+                ViewData["DisplayedName"] = collection["DisplayedName"];
+                ViewData["Contacts"] = collection["Contacts"];
+                return View("Index");
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }

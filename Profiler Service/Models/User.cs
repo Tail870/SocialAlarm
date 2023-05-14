@@ -13,7 +13,7 @@ namespace Profiler_Service.Models
         [Required]
         public string DisplayedName { set; get; }
 
-        public string? Contacts { set; get; }
+        public string? Contacts { set; get; } = "";
 
         public override string ToString()
         {

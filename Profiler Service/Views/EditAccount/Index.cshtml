@@ -1,4 +1,5 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@page "/EditAccount/{Login?}/{DisplayedName?}/{Contacts?}"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @addTagHelper *, AuthoringTagHelpers
 @{
     string Msg = ViewBag.String;
@@ -30,19 +31,22 @@
             </p>
             <p>
                 Текущий пароль:
-                <input type="password" name="OldPassword" />
+                <input type="password" name="OldPassword" required />
             </p>
             <p></p>
             <p>Новый пароль (если изменяется):</p>
             <input type="password" name="Password" />
+
             <p>Отображаемое имя:</p>
-            <input type="text" name="DisplayedName" />
+            <input type="text" name="DisplayedName" required />
+
             <p>Дполнительные данные (например, метод связи):</p>
-            <textarea type="text" name="Contacts" form="editAccount"></textarea>
+            <textarea type="text" name="Contacts" form="editAccount" rows="4" cols="50" 
+                action="/EditAccount?"></textarea>
             <p></p>
+
             <button type="submit">Применить изменения</button>
         </form>
     </div>
-
 </body>
 </html>
