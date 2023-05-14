@@ -4,7 +4,6 @@ using Android.Util;
 using Android.Widget;
 using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.LocalNotification;
-using Plugin.LocalNotification.AndroidOption;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -158,7 +157,7 @@ namespace Client_Android
             {
                 if (arg.User == Preferences.Get("Login", ""))
                 {
-                    Log.Debug("HUB: Удалён рингтон: ", arg.ToString());
+                    Log.Debug("HUB: Удалён рингтог: ", arg.ToString());
                     int position = ActivityMain.settings.myRingtones.FindIndex(element => arg.ID == element.ID);
                     if (position != -1)
                     {
@@ -211,11 +210,10 @@ namespace Client_Android
                     DateTimeOffset currentTime = new DateTimeOffset(1, 1, 2, DateTimeOffset.Now.Hour, DateTimeOffset.Now.Minute, DateTimeOffset.Now.Second, DateTimeOffset.Now.Offset);
                     if ((tempTime.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
                     {
-                        //if (dialog != null)
-                        //{
-                        //    dialog.Dismiss();
-                        //}
-                        dialog?.Dismiss();
+                        if (dialog != null)
+                        {
+                            dialog.Dismiss();
+                        }
 
                         dialog = new AlertDialog.Builder(activity)
                             .SetNegativeButton(Application.Context.Resources.GetString(Resource.String.no), (c, ev) => { })
@@ -263,11 +261,11 @@ namespace Client_Android
                         NotificationCenter.Current.Show((notification) => notification
                                         .WithTitle(ringer + " " + Application.Context.Resources.GetString(Resource.String.rang))
                                         .WithDescription(Application.Context.Resources.GetString(Resource.String.alarm_description) + "\n" + myAlarm.Description)
-                                        .WithBadgeNumber(ringNotificationCounter)
+                                        .WithBadgeCount(ringNotificationCounter)
                                          .WithNotificationId(ringNotificationCounter)
                                         .WithAndroidOptions((android) => android
                                             .WithChannelId("social_alarm")
-                                            .WithIconSmallName(new AndroidIcon("ic_my_alarms_black_24dp"))
+                                            .WithIconName("ic_my_alarms_black_24dp")
                                         .Build())
                                         .Create());
                         ringNotificationCounter++;
