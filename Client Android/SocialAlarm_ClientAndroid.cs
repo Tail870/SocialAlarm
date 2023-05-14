@@ -220,9 +220,9 @@ namespace Client_Android
                             .SetPositiveButton(Application.Context.Resources.GetString(Resource.String.yes), async (c, ev) => await FinishAlarmAsync(true, alarmID, ringer))
                             .SetIcon(Resource.Drawable.ic_clock_black_24dp)
                             .SetTitle(
-                            Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt_user) +
-                            ringer +
-                            Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt)
+                                Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt_user) + " " +
+                                ringer + " " +
+                                Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt)
                             )
                             .SetMessage(Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt_yn))
                             .Create();
