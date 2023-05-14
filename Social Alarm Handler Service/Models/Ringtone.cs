@@ -20,10 +20,24 @@ namespace Social_Alarm.Models
 
         public override string ToString()
         {
-            return "ID: " + ID + "; " +
-                "User: " + User + "; " +
-                "Ringtone name: " + RingtoneName + "; " +
-                "Description: " + Description;
+            string result = string.Empty;
+            if (ID != null)
+                result += ("ID: " + ID + "; ");
+            else
+                result += ("ID: [null]; ");
+            if (User != null)
+                result += ("User: " + User + "; ");
+            else
+                result += ("User: [null]; ");
+            if (RingtoneName != null)
+                result += ("Ringtone name: " + RingtoneName + "; ");
+            else
+                result += ("Ringtone name: [null]; ");
+            if (Description != null)
+                result += ("Description: " + Description + ". ");
+            else
+                result += ("Description: [null]. ");
+            return result;
         }
     }
 }

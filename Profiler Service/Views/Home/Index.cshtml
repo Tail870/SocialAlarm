@@ -1,0 +1,43 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    string Msg = ViewBag.String;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Социальный Будильник</title>
+    <style>
+        div {
+            text-align: center;
+            width: 2000px;
+            position: fixed;
+            left: 50%;
+            margin-left: -1000px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>@Msg</h1>
+        <h2>Авторизация</h2>
+        <form method="post" enctype="multipart/form-data" id="auth">
+            <p>Логин:
+                <input type="text" name="Login" required />
+            </p>
+            <p>Пароль:
+                <input type="password" name="Password" required />
+            </p>
+            <button type="submit">Войти</button>
+        </form>
+        <p></p>
+        <p>Нет учётной записи?</p>
+        <form action="/register">
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+
+</body>
+</html>

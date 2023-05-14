@@ -1,23 +1,20 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Social_Alarm.Models
+namespace Client_Android
 {
+    [Serializable]
     public class Alarm
     {
-        [Key]
         public int ID { set; get; }
 
-        [Required]
         public string User { set; get; }
+        public string DisplayedName { set; get; }
+        public string UserDecription { set; get; }
 
-        [Required]
         public bool IsWaker { set; get; }
 
-        [Required]
         public DateTimeOffset Time { set; get; }
 
-        [Required]
         public int Threshold { set; get; }
 
         public string Description { set; get; }

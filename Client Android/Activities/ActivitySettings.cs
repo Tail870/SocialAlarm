@@ -66,12 +66,12 @@ namespace Client_Android
                 switch (requestCode)
                 {
                     case 2:
-                        ActivityMain.socialAlarm.AddChangeRingtone(JsonConvert.DeserializeObject<Model_Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
+                        ActivityMain.socialAlarm.AddChangeRingtone(JsonConvert.DeserializeObject<Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
                         recyclerView.ScrollToPosition(ActivityMain.settings.myRingtones.Count);
                         break;
                     case 3:
                         int position = intent.GetIntExtra("AlarmPosition", 0);
-                        ActivityMain.socialAlarm.AddChangeRingtone(JsonConvert.DeserializeObject<Model_Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
+                        ActivityMain.socialAlarm.AddChangeRingtone(JsonConvert.DeserializeObject<Ringtone>(intent.GetStringExtra("RingtoneToEdit")));
                         ActivityMain.settings.MyRingtonesAdapter.NotifyItemChanged(position);
                         break;
                 }

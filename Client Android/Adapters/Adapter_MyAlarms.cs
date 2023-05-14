@@ -11,11 +11,11 @@ namespace Client_Android
 {
     public class Adapter_MyAlarms : RecyclerView.Adapter
     {
-        private List<Model_Alarm> myAlarms;
+        private List<Alarm> myAlarms;
         private ViewHolder_MyAlarmAdapter viewHolder;
         public Activity activity;
 
-        public Adapter_MyAlarms(ref List<Model_Alarm> MyAlarms, Activity activity)
+        public Adapter_MyAlarms(ref List<Alarm> MyAlarms, Activity activity)
         {
             myAlarms = MyAlarms;
             this.activity = activity;
@@ -61,7 +61,7 @@ namespace Client_Android
         public Button buttonEdit { get; set; }
         public Button buttonDelete { get; set; }
         public Adapter_MyAlarms adapter { get; set; }
-        private List<Model_Alarm> myAlarms { get; set; }
+        private List<Alarm> myAlarms { get; set; }
 
         public ViewHolder_MyAlarmAdapter(View itemView, Adapter_MyAlarms adapter) : base(itemView)
         {
@@ -81,7 +81,7 @@ namespace Client_Android
          * Pass reference to alarms 
          * to this class.        
          */
-        public void SetMyAlarms(ref List<Model_Alarm> myAlarms)
+        public void SetMyAlarms(ref List<Alarm> myAlarms)
         {
             this.myAlarms = myAlarms;
         }
@@ -93,7 +93,7 @@ namespace Client_Android
         public void RemoveItem()
         {
             int position = AdapterPosition;
-            Model_Alarm alarm = myAlarms[position];
+            Alarm alarm = myAlarms[position];
             ActivityMain.socialAlarm.RemoveAlarm(alarm);
             myAlarms.RemoveAt(position);
             adapter.NotifyItemRemoved(position);

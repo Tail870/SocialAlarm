@@ -1,0 +1,48 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, AuthoringTagHelpers
+@{
+    string Msg = ViewBag.String;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Социальный Будильник - изменить учётную запись</title>
+    <style>
+        div {
+            text-align: center;
+            width: 2000px;
+            position: fixed;
+            left: 50%;
+            margin-left: -1000px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>@Msg</h1>
+        <h2>Форма редактирования учётной записи</h2>
+        <form method="post" enctype="multipart/form-data" id="editAccount">
+            <p>
+                Логин:
+                <input type="text" name="Login" required />
+            </p>
+            <p>
+                Текущий пароль:
+                <input type="password" name="OldPassword" />
+            </p>
+            <p></p>
+            <p>Новый пароль (если изменяется):</p>
+            <input type="password" name="Password" />
+            <p>Отображаемое имя:</p>
+            <input type="text" name="DisplayedName" />
+            <p>Дполнительные данные (например, метод связи):</p>
+            <textarea type="text" name="Contacts" form="editAccount"></textarea>
+            <p></p>
+            <button type="submit">Применить изменения</button>
+        </form>
+    </div>
+
+</body>
+</html>

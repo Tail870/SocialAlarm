@@ -1,25 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
-namespace Profiler_Service.Models
+namespace Client_Android
 {
+    [Serializable]
     public class AlarmLog
     {
-        [Key]
         public int ID { set; get; }
 
-        [Required]
         public string UserSlept { set; get; }
+        public string DisplayedNameSlept { set; get; }
 
         public string UserWaker { set; get; }
+        public string DisplayedNameWaker { set; get; }
 
         public string Description { set; get; }
 
-        [Required]
         public DateTimeOffset DateTime { set; get; }
 
-        [Required]
         public bool IsWaker { set; get; }
-
 
         public override string ToString()
         {

@@ -1,21 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SQLite;
+using System;
 
-namespace Profiler_Service.Models
+namespace Client_Android
 {
+    [Serializable]
+    [Table("ringtones")]
     public class Ringtone
     {
-        [Key]
+        [PrimaryKey]
         public int ID { set; get; }
 
-        [Required]
         public string User { set; get; }
+        public string DisplayedUserName { set; get; }
 
-        [Required]
         public string RingtoneName { set; get; }
 
         public string Description { set; get; }
 
-        [Required]
         public string File { set; get; }
 
         public override string ToString()

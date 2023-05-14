@@ -13,11 +13,11 @@ namespace Client_Android
 {
     public class Adapter_MyRingtones : RecyclerView.Adapter
     {
-        public List<Model_Ringtone> Ringtones;
+        public List<Ringtone> Ringtones;
         private ViewHolder_MyRingtones viewHolder;
         public Activity activity;
 
-        public Adapter_MyRingtones(List<Model_Ringtone> Ringtones, Activity activity)
+        public Adapter_MyRingtones(List<Ringtone> Ringtones, Activity activity)
         {
             this.Ringtones = Ringtones;
             this.activity = activity;

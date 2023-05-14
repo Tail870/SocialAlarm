@@ -22,8 +22,8 @@ namespace Client_Android
         private Button buttonCancel { get; set; }
         private static Button buttonFinish { get; set; }
 
-        public static List<Model_Ringtone> othersRingtones;
-        public static Model_Alarm currentlyRinging;
+        public static List<Ringtone> othersRingtones;
+        public static Alarm currentlyRinging;
         public static Adapter_OthersRingtones adapter_OthersRingtones;
 
         protected override void OnCreate(Bundle savedInstanceState)

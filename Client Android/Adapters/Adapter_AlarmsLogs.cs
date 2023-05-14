@@ -9,10 +9,10 @@ namespace Client_Android
 {
     public class Adapter_AlarmsLogs : RecyclerView.Adapter
     {
-        private readonly List<Model_AlarmLog> alarmsLogs;
+        private readonly List<AlarmLog> alarmsLogs;
         private ViewHolder_AlarmsLogsAdapter viewHolder;
 
-        public Adapter_AlarmsLogs(ref List<Model_AlarmLog> alarmsLogs)
+        public Adapter_AlarmsLogs(ref List<AlarmLog> alarmsLogs)
         {
             this.alarmsLogs = alarmsLogs;
         }

@@ -11,11 +11,11 @@ namespace Client_Android
     public class Adapter_OthersAlarms : RecyclerView.Adapter
     {
         private ViewHolder_OthersAlarmsAdapter viewHolder;
-        public List<Model_Alarm> othersAlarms;
+        public List<Alarm> othersAlarms;
         public Activity activity;
         public static ActivityRing activityRing = null;
 
-        public Adapter_OthersAlarms(List<Model_Alarm> OthersAlarms, Activity activity)
+        public Adapter_OthersAlarms(List<Alarm> OthersAlarms, Activity activity)
         {
             othersAlarms = OthersAlarms;
             this.activity = activity;
@@ -86,7 +86,7 @@ namespace Client_Android
         {
             Adapter_OthersAlarms.activityRing = new ActivityRing();
             Intent intent = new Intent(adapter.activity, typeof(ActivityRing));
-            ActivityRing.othersRingtones = new List<Model_Ringtone>();
+            ActivityRing.othersRingtones = new List<Ringtone>();
             try
             {
                 ActivityRing.currentlyRinging = adapter.othersAlarms[AdapterPosition];

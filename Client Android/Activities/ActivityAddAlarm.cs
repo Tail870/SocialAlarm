@@ -23,7 +23,7 @@ namespace Client_Android
         public TimePicker timePicker { get; set; }
         public TimePicker timePickerThreshold { get; set; }
 
-        private Model_Alarm alarm;
+        private Alarm alarm;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -49,7 +49,7 @@ namespace Client_Android
             string alarmJSON = Intent.GetStringExtra("AlarmToEdit");
             if (alarmJSON != null)
             {
-                alarm = JsonConvert.DeserializeObject<Model_Alarm>(alarmJSON);
+                alarm = JsonConvert.DeserializeObject<Alarm>(alarmJSON);
                 toggleButtonIsWaker.Checked = alarm.IsWaker;
                 editTextDescription.Text = alarm.Description;
                 DateTimeOffset time = alarm.Time.ToLocalTime();
@@ -64,7 +64,7 @@ namespace Client_Android
         private void SaveChanges()
         {
             if (alarm == null)
-            { alarm = new Model_Alarm(); }
+            { alarm = new Alarm(); }
             alarm.User = Preferences.Get("Login", "");
             alarm.IsWaker = toggleButtonIsWaker.Checked;
             alarm.Description = editTextDescription.Text;

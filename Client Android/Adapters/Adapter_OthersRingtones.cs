@@ -8,10 +8,10 @@ namespace Client_Android
     public class Adapter_OthersRingtones : RecyclerView.Adapter
     {
         private ViewHolder_OthersRingtones viewHolder;
-        public List<Model_Ringtone> Ringtones { get; }
-        public Model_Alarm alarm { get; }
+        public List<Ringtone> Ringtones { get; }
+        public Alarm alarm { get; }
 
-        public Adapter_OthersRingtones(List<Model_Ringtone> Ringtones, Model_Alarm alarm)
+        public Adapter_OthersRingtones(List<Ringtone> Ringtones, Alarm alarm)
         {
             this.Ringtones = Ringtones;
             this.alarm = alarm;

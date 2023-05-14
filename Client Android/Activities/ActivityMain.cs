@@ -19,11 +19,11 @@ namespace Client_Android
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme", MainLauncher = true)]
     public class ActivityMain : AppCompatActivity, BottomNavigationView.IOnNavigationItemSelectedListener
     {
-        private List<Model_Alarm> myAlarms = new List<Model_Alarm>();
+        private List<Alarm> myAlarms = new List<Alarm>();
         private Adapter_MyAlarms myAlarmsAdapter;
-        private List<Model_Alarm> othersAlarms = new List<Model_Alarm>();
+        private List<Alarm> othersAlarms = new List<Alarm>();
         private Adapter_OthersAlarms othersAlarmsAdapter;
-        private List<Model_AlarmLog> AlarmsLogs = new List<Model_AlarmLog>();
+        private List<AlarmLog> AlarmsLogs = new List<AlarmLog>();
         private Adapter_AlarmsLogs AlarmsLogsAdapter;
 
         private BottomNavigationView navigation;
@@ -32,7 +32,7 @@ namespace Client_Android
 
         public static Settings settings = null;
         public static SocialAlarm_ClientAndroid socialAlarm;
-        public static Ringtone ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Alarm));
+        public static Android.Media.Ringtone ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Alarm));
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -69,12 +69,12 @@ namespace Client_Android
                 switch (requestCode)
                 {
                     case 0:
-                        socialAlarm.AddChangeAlarm(JsonConvert.DeserializeObject<Model_Alarm>(intent.GetStringExtra("AlarmToEdit")));
+                        socialAlarm.AddChangeAlarm(JsonConvert.DeserializeObject<Alarm>(intent.GetStringExtra("AlarmToEdit")));
                         recyclerView.ScrollToPosition(myAlarms.Count + 1);
                         break;
                     case 1:
                         int position = intent.GetIntExtra("AlarmPosition", 0);
-                        socialAlarm.AddChangeAlarm(JsonConvert.DeserializeObject<Model_Alarm>(intent.GetStringExtra("AlarmToEdit")));
+                        socialAlarm.AddChangeAlarm(JsonConvert.DeserializeObject<Alarm>(intent.GetStringExtra("AlarmToEdit")));
                         myAlarmsAdapter.NotifyItemChanged(position);
                         break;
                 }

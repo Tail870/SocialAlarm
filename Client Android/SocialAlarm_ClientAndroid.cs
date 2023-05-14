@@ -15,11 +15,11 @@ namespace Client_Android
 {
     public class SocialAlarm_ClientAndroid : ContentPage
     {
-        private readonly List<Model_Alarm> myAlarms;
+        private readonly List<Alarm> myAlarms;
         private readonly Adapter_MyAlarms myAlarmsAdapter;
-        private readonly List<Model_Alarm> othersAlarms;
+        private readonly List<Alarm> othersAlarms;
         private readonly Adapter_OthersAlarms othersAlarmsAdapter;
-        private readonly List<Model_AlarmLog> AlarmsLogs;
+        private readonly List<AlarmLog> AlarmsLogs;
         private readonly Adapter_AlarmsLogs AlarmsLogsAdapter;
         private int ringNotificationCounter = 0;
         private readonly string address = string.Empty;
@@ -28,7 +28,7 @@ namespace Client_Android
 
         public HubConnection connection = null;
 
-        public SocialAlarm_ClientAndroid(string address, ref List<Model_Alarm> myAlarms, ref List<Model_Alarm> othersAlarms, ref List<Model_AlarmLog> AlarmsLogs, ref Adapter_MyAlarms myAlarmsAdapter, ref Adapter_OthersAlarms othersAlarmsAdapter, ref Adapter_AlarmsLogs AlarmsLogsAdapter)
+        public SocialAlarm_ClientAndroid(string address, ref List<Alarm> myAlarms, ref List<Alarm> othersAlarms, ref List<AlarmLog> AlarmsLogs, ref Adapter_MyAlarms myAlarmsAdapter, ref Adapter_OthersAlarms othersAlarmsAdapter, ref Adapter_AlarmsLogs AlarmsLogsAdapter)
         {
             this.address = address;
             this.myAlarms = myAlarms;
@@ -58,7 +58,7 @@ namespace Client_Android
                 Log.Debug("HUB: From server: ", arg.ToString());
             });
 
-            connection.On<Model_Alarm, string, string>("GetAlarm", (receivedAlarm, displayedUser, userDecription) =>
+            connection.On<Alarm, string, string>("GetAlarm", (receivedAlarm, displayedUser, userDecription) =>
             {
                 Log.Debug("HUB: Получен будильник: ", receivedAlarm.ToString());
                 int position;
@@ -102,7 +102,7 @@ namespace Client_Android
                 }
             });
 
-            connection.On<Model_Alarm>("RemovedAlarm", (removedAlarm) =>
+            connection.On<Alarm>("RemovedAlarm", (removedAlarm) =>
             {
                 Log.Debug("HUB: Удалён будильник: ", removedAlarm.ToString());
                 int position1 = othersAlarms.FindIndex(element => removedAlarm.ID == element.ID);
@@ -119,7 +119,7 @@ namespace Client_Android
                 }
             });
 
-            connection.On<Model_AlarmLog, string, string>("GetAlarmLogs", (receivedAlarmLog, waker, sleeper) =>
+            connection.On<AlarmLog, string, string>("GetAlarmLogs", (receivedAlarmLog, waker, sleeper) =>
               {
                   Log.Debug("HUB: Получен лог: ", receivedAlarmLog.ToString());
                   if (waker.Trim().Length > 0)
@@ -143,7 +143,7 @@ namespace Client_Android
                   }
               });
 
-            connection.On<Model_Ringtone>("AddedRingtone", (myRingtone) =>
+            connection.On<Ringtone>("AddedRingtone", (myRingtone) =>
             {
                 Log.Debug("HUB: Добавлен сигнал: ", myRingtone.ToString());
                 if (myRingtone.User == Preferences.Get("Login", ""))
@@ -153,7 +153,7 @@ namespace Client_Android
                 }
             });
 
-            connection.On<Model_Ringtone>("RemovedRingtone", (arg) =>
+            connection.On<Ringtone>("RemovedRingtone", (arg) =>
             {
                 if (arg.User == Preferences.Get("Login", ""))
                 {
@@ -167,14 +167,14 @@ namespace Client_Android
                 }
             });
 
-            connection.On<Model_Ringtone>("GetMyRingtone", (myRingtone) =>
+            connection.On<Ringtone>("GetMyRingtone", (myRingtone) =>
             {
                 Console.WriteLine("Получен личный сигнал: " + myRingtone.ToString());
                 if (myRingtone.User == Preferences.Get("Login", ""))
                 { ActivityMain.settings.ReceiveRingtone(myRingtone); }
             });
 
-            connection.On<Model_Ringtone, int>("GetRingtones", (ringtone, alarmID) =>
+            connection.On<Ringtone, int>("GetRingtones", (ringtone, alarmID) =>
             {
                 Console.WriteLine("Получен сигнал: " + ringtone.ToString());
                 if (ringtone.User != Preferences.Get("Login", "") && (ActivityRing.currentlyRinging != null && ActivityRing.currentlyRinging.ID == alarmID))
@@ -203,7 +203,7 @@ namespace Client_Android
             connection.On<int, string, string>("FinishAlarm", (alarmID, ringer, ringerDisplay) =>
             {
                 Log.Debug("HUB: ", "Finish alarm atempt... ");
-                Model_Alarm myAlarm = myAlarms.Find(element => element.ID == alarmID);
+                Alarm myAlarm = myAlarms.Find(element => element.ID == alarmID);
                 if (myAlarm != null)
                 {
                     DateTimeOffset tempTime = myAlarm.Time;
@@ -231,10 +231,10 @@ namespace Client_Android
                 }
             });
 
-            connection.On<int, int, string>("RingAlarm", (ringtoneID, alarmID, ringer) =>
+            connection.On("RingAlarm", (int ringtoneID, int alarmID, string ringer) =>
             {
                 Log.Debug("HUB: ", "Ring attempt... ");
-                Model_Alarm myAlarm = myAlarms.Find(element => element.ID == alarmID);
+                Alarm myAlarm = myAlarms.Find(element => element.ID == alarmID);
                 ActivityMain.ringtone.Stop();
                 if (myAlarm != null)
                 {
@@ -244,7 +244,7 @@ namespace Client_Android
 
                     if ((tempTime.AddMinutes(0 - myAlarm.Threshold) <= currentTime) && (currentTime <= tempTime))
                     {
-                        Model_Ringtone ringtoneData = ActivityMain.settings.myRingtones.Find(element => element.ID == ringtoneID);
+                        Ringtone ringtoneData = ActivityMain.settings.myRingtones.Find(element => element.ID == ringtoneID);
                         if (ringtoneData != null)
                         {
                             Log.Debug("HUB: ", "Playing " + ringtoneData.ToString());
@@ -318,7 +318,7 @@ namespace Client_Android
             }
         }
 
-        public void AddChangeAlarm(Model_Alarm alarm)
+        public void AddChangeAlarm(Alarm alarm)
         {
             Log.Debug("HUB: adding alarm", alarm.ToString());
             try
@@ -353,7 +353,7 @@ namespace Client_Android
             { Toast.MakeText(Application.Context, Application.Context.Resources.GetString(Resource.String.network_error), ToastLength.Long).Show(); }
         }
 
-        public void RemoveAlarm(Model_Alarm alarm)
+        public void RemoveAlarm(Alarm alarm)
         {
             try
             { connection.InvokeAsync("RemoveAlarm", alarm); }
@@ -361,7 +361,7 @@ namespace Client_Android
             { Toast.MakeText(Application.Context, Application.Context.Resources.GetString(Resource.String.network_error), ToastLength.Long).Show(); }
         }
 
-        public void AddChangeRingtone(Model_Ringtone ringtone)
+        public void AddChangeRingtone(Ringtone ringtone)
         {
             try
             { connection.InvokeAsync("AddRingtone", ringtone); }
@@ -377,7 +377,7 @@ namespace Client_Android
             { Toast.MakeText(Application.Context, Application.Context.Resources.GetString(Resource.String.network_error), ToastLength.Long).Show(); }
         }
 
-        public void RemoveRingtone(Model_Ringtone ringtone)
+        public void RemoveRingtone(Ringtone ringtone)
         {
             try
             { connection.InvokeAsync("RemoveRingtone", ringtone); }
@@ -385,7 +385,7 @@ namespace Client_Android
             { Toast.MakeText(Application.Context, Application.Context.Resources.GetString(Resource.String.network_error), ToastLength.Long).Show(); }
         }
 
-        public void CheckRingtone(Model_Ringtone ringtone)
+        public void CheckRingtone(Ringtone ringtone)
         {
             try
             { connection.InvokeAsync("CheckRingtone", ringtone); }
@@ -393,7 +393,7 @@ namespace Client_Android
             { Toast.MakeText(Application.Context, Application.Context.Resources.GetString(Resource.String.network_error), ToastLength.Long).Show(); }
         }
 
-        public void GetRingtones(Model_Alarm userToAnnoy)
+        public void GetRingtones(Alarm userToAnnoy)
         {
             try
             { connection.InvokeAsync("GetRingtones", userToAnnoy); }

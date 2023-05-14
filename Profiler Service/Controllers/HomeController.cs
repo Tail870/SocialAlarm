@@ -4,7 +4,7 @@ using System.Web.Helpers;
 
 namespace Profiler_Service.Controllers
 {
-    public class RegisterController : Controller
+    public class HomeController : Controller
     {
         public const string Registered = "Пользователь успешно зарегистрирован!";
         public const string Exists = "Пользователь уже существует!";

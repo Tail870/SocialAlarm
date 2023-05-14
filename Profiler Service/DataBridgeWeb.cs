@@ -55,8 +55,7 @@ namespace Profiler_Service
                 return code;
             }
         }
-
-        public int ChangeUser(User user, string OldPassword)
+        public int AuthUser(User user)
         {
             int code = -1;
             User addedUser = null;
@@ -81,6 +80,44 @@ namespace Profiler_Service
                 else
                 if (users.Count == 0)
                 { code = 3; }
+                return code;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("/------------ERROR IN: ChangeUser------------\\");
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("\\------------ERROR IN: ChangeUser------------/");
+                return code;
+            }
+        }
+
+        public int ChangeUser(User user, string OldPassword)
+        {
+            int code = -1;
+            User addedUser = null;
+            try
+            {
+                DataBaseContext context = new();
+                List<User> users = context.Users.AsNoTracking().Where(element => element.Login == user.Login).ToList();
+                if (users.Count == 1)
+                {
+                    // Verify password HASH
+                    Crypto.VerifyHashedPassword(users.Where(element => element.Login == user.Login).ElementAt(0).Password, OldPassword);
+                    Console.WriteLine("Changing user...");
+                    Console.WriteLine("Old account:\n" + users[0].ToString());
+                    if (user.Password.Length == 0)
+                        user.Password = OldPassword;
+                    addedUser = context.Users.Update(user).Entity;
+                    Console.WriteLine("New account:\n" + addedUser.ToString());
+                    context.SaveChanges();
+                    code = 0;
+                }
+                else
+                if (users.Count > 1)
+                    code = 2;
+                else
+                if (users.Count == 0)
+                    code = 3;
                 return code;
             }
             catch (Exception ex)
