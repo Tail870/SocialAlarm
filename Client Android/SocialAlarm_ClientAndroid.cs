@@ -219,7 +219,11 @@ namespace Client_Android
                             .SetNegativeButton(Application.Context.Resources.GetString(Resource.String.no), (c, ev) => { })
                             .SetPositiveButton(Application.Context.Resources.GetString(Resource.String.yes), async (c, ev) => await FinishAlarmAsync(true, alarmID, ringer))
                             .SetIcon(Resource.Drawable.ic_clock_black_24dp)
-                            .SetTitle(Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt))
+                            .SetTitle(
+                            Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt_user) +
+                            ringer +
+                            Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt)
+                            )
                             .SetMessage(Application.Context.Resources.GetString(Resource.String.alarm_finish_atempt_yn))
                             .Create();
                         dialog.Show();
