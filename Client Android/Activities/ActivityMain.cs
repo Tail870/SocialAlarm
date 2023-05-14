@@ -32,7 +32,7 @@ namespace Client_Android
 
         public static Settings settings = null;
         public static SocialAlarm_ClientAndroid socialAlarm;
-        public static Android.Media.Ringtone ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.Alarm));
+        public static Android.Media.Ringtone ringtone = RingtoneManager.GetRingtone(Application.Context, RingtoneManager.GetActualDefaultRingtoneUri(Application.Context, RingtoneType.All));
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
