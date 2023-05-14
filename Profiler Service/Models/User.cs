@@ -13,7 +13,7 @@ namespace Profiler_Service.Models
         [Required]
         public string DisplayedName { set; get; }
 
-        public string? Contacts { set; get; } = "";
+        public string? Contacts { set; get; }
 
         public override string ToString()
         {
@@ -22,15 +22,15 @@ namespace Profiler_Service.Models
                 result += ("Login: " + Login.ToString() + "; ");
             else
                 result += ("Login: [null]; ");
-            if (Login != null)
+            if (DisplayedName != null)
                 result += ("Password: " + DisplayedName.ToString() + "; ");
             else
                 result += ("Password: [null]; ");
-            if (Login != null)
+            if (Password != null)
                 result += ("Displayed name: " + Password.ToString() + "; ");
             else
                 result += ("Displayed name: [null]; ");
-            if (Login != null)
+            if (Contacts != null)
                 result += ("Contacs: " + Contacts.ToString() + ". ");
             else
                 result += ("Contacs: [null].");
